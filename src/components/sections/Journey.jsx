@@ -16,9 +16,9 @@ function buildNodes() {
   const nodes = [
     {
       kind: 'start',
-      title: 'The Club Is Born',
+      title: 'The Club Is Start',
       date: foundedLabel,
-      text: 'Sipna AWS Club was founded at Sipna COET to bring hands-on AWS cloud learning to students.',
+      text: 'Every big cloud starts with one drop. Ours was our leader, Ayushi Sawarkar, who started Sipna AWS Club at Sipna COET and gave students a place to learn AWS by building.',
     },
     ...PAST_EVENTS.map((event) => ({
       kind: 'event',

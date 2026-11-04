@@ -16,7 +16,6 @@ import Benefits from './components/sections/Benefits'
 import Journey from './components/sections/Journey'
 import EventsReel from './components/sections/EventsReel'
 import Winners from './components/sections/Winners'
-import Showcase from './components/sections/Showcase'
 import Upcoming from './components/sections/Upcoming'
 import Team from './components/sections/Team'
 import Learn from './components/sections/Learn'
@@ -87,7 +86,6 @@ export default function App() {
         <Journey onOpen={setActiveEvent} />
         <EventsReel onOpen={setActiveEvent} />
         <Winners />
-        <Showcase />
         <Upcoming />
         <Team />
         <Learn />

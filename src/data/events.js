@@ -11,38 +11,51 @@ import { getEventMedia } from '../lib/eventMedia'
 import { getWinnerPhoto } from '../lib/winnerPhotos'
 
 const PAST = [
-  {
+    {
     id: 'inauguration', // folder: src/assets/events/inauguration/
     title: 'Club Inauguration',
     category: 'Launch',
-    date: '', // e.g. '12 Aug 2026'
+    date: '3 August 2026', // e.g. '12 Aug 2026'  (keep the quotes)
     description:
       'The day Sipna AWS Club officially began: our first gathering of students curious about cloud computing.',
-    participants: 0, // number of attendees (0 = hidden)
-    highlights: [], // e.g. ['Chief guest talk', 'Club roadmap revealed']
-    youtube: '', // optional YouTube link instead of video.mp4
+    participants: 150, // number of attendees, no quotes. 0 hides it
+    highlights: ['Chief guest talk', 'Club roadmap revealed'], // e.g. ['Chief guest talk', 'Club roadmap revealed']
+    instagram: 'https://www.instagram.com/reel/DbtNDtDzJZ8/?vrfl=MWI2cm9tdTVpaG9waw==', // optional YouTube link instead of video.mp4
   },
-  {
-    id: 'coding-competition', // folder: src/assets/events/coding-competition/
-    title: 'Coding Competition',
+    {
+    id: 'codorithm-2k26', // folder: src/assets/events/codorithm-2k26/
+    title: 'Codorithm 2K26-A',
     category: 'Competition',
-    date: '',
+    date: '8 Sep 2026',
     description:
       'Our first competition, where students put their problem-solving skills to the test and battled for the podium.',
-    participants: 0,
-    highlights: [],
+    participants: 193,
+    highlights: [
+      'Coding questions held on the HackerRank platform',
+      '193 participants from different branches',
+      '10:30 AM to 5:30 PM at the Department of Information Technology, Sipna COET',
+      'Cash prizes of ₹11,000, ₹9,000 and ₹7,000 with memento and certificate',
+    ],
     youtube: '',
   },
-  {
+    {
     id: 'portfolio-hosting', // folder: src/assets/events/portfolio-hosting/
-    title: 'Online Portfolio Hosting',
+    title: 'Host Your Portfolio on AWS',
     category: 'Online Workshop',
-    date: '',
+    date: '1 Nov 2026',
     description:
-      'A hands-on online session where students took their portfolio websites live on the internet.',
-    participants: 0,
-    highlights: [],
+      'A hands-on online workshop where students took their portfolio websites live on the internet using Amazon S3.',
+    participants: 0, // put the real number of attendees here, 0 hides it
+    highlights: [
+      'Hosted a portfolio website using Amazon S3',
+      'Configured static website hosting on AWS',
+      'Deployed the website and got a live URL',
+      'Speaker: Aishwary Gathe, DevRel @ meetio, Community Builder with 3+ years of experience',
+      'Online on Google Meet at 8:00 PM',
+      'E-certificates for participants who met the attendance requirement',
+    ],
     youtube: '',
+    instagram: '',
   },
 ]
 
@@ -63,25 +76,35 @@ export const PAST_EVENTS = PAST.map((e) => ({ ...e, ...getEventMedia(e.id) }))
 const HOF = [
   {
     id: 'coding-competition',
-    event: 'Coding Competition',
-    date: '', // e.g. '15 Sep 2026'
+    event: 'Codorithm 2K26-A',
+    date: '8 Sep 2026',
     places: [
-      { rank: 1, name: '', detail: '', photo: '' }, // Winner          photo: 'name.jpg'
-      { rank: 2, name: '', detail: '', photo: '' }, // 1st Runner Up
-      { rank: 3, name: '', detail: '', photo: '' }, // 2nd Runner Up
+      {
+        rank: 1,
+        name: 'Aniruddh Umbarkar & Umer Khan',
+        detail: '',
+        photo: 'winner.jpg',
+        prize: '₹11,000 Cash Prize',
+        extras: ['Memento', 'Certificate'],
+      },
+      {
+        rank: 2,
+        name: 'Pranav Mavle',
+        detail: '',
+        photo: 'second.jpg',
+        prize: '₹9,000 Cash Prize',
+        extras: ['Memento', 'Certificate'],
+      },
+      {
+        rank: 3,
+        name: 'Rishi Maskare',
+        detail: '',
+        photo: 'third.jpg',
+        prize: '₹7,000 Cash Prize',
+        extras: ['Memento', 'Certificate'],
+      },
     ],
   },
-  // Copy the block above for the next one, for example:
-  // {
-  //   id: 'hackathon',
-  //   event: 'Hackathon',
-  //   date: '10 Jan 2027',
-  //   places: [
-  //     { rank: 1, name: 'Team Cloudbusters', detail: 'Ritesh, Parth, Ansh', photo: 'cloudbusters.jpg' },
-  //     { rank: 2, name: '...', detail: '...', photo: '...' },
-  //     { rank: 3, name: '...', detail: '...', photo: '...' },
-  //   ],
-  // },
 ]
 
 const DEFAULT_LABEL = { 1: 'Winner', 2: '1st Runner Up', 3: '2nd Runner Up' }
@@ -97,6 +120,9 @@ export const HALL_OF_FAME = HOF.map((c) => ({
       detail: p.detail || '',
       label: p.label || DEFAULT_LABEL[rank], // optional: add  label: '...'  to change the small tag
       photo: getWinnerPhoto(p.photo),
+      focus: p.focus || 'center',
+      prize: p.prize || '',
+      extras: p.extras || [],
     }
   }),
 }))

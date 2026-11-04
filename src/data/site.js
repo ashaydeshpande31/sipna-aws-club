@@ -19,11 +19,11 @@ export const SITE = {
     // Paste your Google Form / registration link here. Empty = button shows "coming soon".
     joinForm: '',
     // Paste your WhatsApp community invite link here. Empty = button is hidden.
-    whatsapp: '',
+    whatsapp: 'https://chat.whatsapp.com/GXXex8U6TDl8xqDSXSJATu',
     // Social pages (check these are the real club accounts).
-    linkedin: 'https://linkedin.com/company/sipna-aws-club',
-    github: 'https://github.com/sipna-aws-club',
-    instagram: 'https://instagram.com/sipna_aws_club',
+    linkedin: 'https://www.linkedin.com/company/aws-student-builder-group-at-sipna/',
+    github: '',
+    instagram: 'https://www.instagram.com/aws_sbg_sipna',
   },
 }
 
