@@ -33,9 +33,22 @@ import ansh from '../assets/team/ansh.jpg'
 import ishwari from '../assets/team/ishwari.jpg'
 import niyati from '../assets/team/niyati.jpg'
 import gunjan from '../assets/team/gunjan.jpg'
+import { getTeamPhoto } from '../lib/teamPhoto'
 
 const IT = 'Information Technology'
 const CSE = 'Computer Science & Engineering'
+
+// ---------------- Group photo (wide banner at the top of the Team section) ----------------
+//  2 places:
+//   1) Put ONE photo in   src/assets/team-photo/   (any file name, e.g. IMG_2034.jpg)
+//   2) Change the caption / date below if you want.
+//  No photo in that folder = the banner stays hidden.
+export const TEAM_PHOTO = {
+  src: getTeamPhoto(),
+  caption: 'The Sipna AWS Club family',
+  date: '', // optional, e.g. 'Inauguration day'
+  focus: 'center 30%', // which part stays visible when the photo is cropped: 'center', 'top', 'center 20%' ...
+}
 
 // ---------------- Club Lead ----------------
 export const LEADER = {

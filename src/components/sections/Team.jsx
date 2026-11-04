@@ -1,12 +1,15 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { Users } from 'lucide-react'
 import SectionHead from '../ui/SectionHead'
 import Socials from '../ui/Socials'
 import { Reveal, Card3D } from '../ui/motion'
+import { gsap, reducedMotion } from '../../lib/scroll'
 import {
   LEADER,
   CORE_TEAM,
   MEMBERS,
   ALL_PEOPLE,
+  TEAM_PHOTO,
   DOMAIN_ORDER,
   getDomain,
   getInitials,
@@ -41,6 +44,80 @@ function Photo({ person, className = '' }) {
       onError={() => setBad(true)}
       className={`h-full w-full object-cover object-top ${className}`}
     />
+  )
+}
+
+/** Wide group photo: opens up from a small frame as you scroll, with a slow parallax inside. */
+function GroupPhoto({ onBad }) {
+  const root = useRef(null)
+  const frame = useRef(null)
+  const img = useRef(null)
+
+  useEffect(() => {
+    const el = root.current
+    if (!el || reducedMotion()) return
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        frame.current,
+        { clipPath: 'inset(14% 10% 14% 10% round 32px)' },
+        {
+          clipPath: 'inset(0% 0% 0% 0% round 32px)',
+          ease: 'none',
+          scrollTrigger: { trigger: el, start: 'top 95%', end: 'top 45%', scrub: true },
+        },
+      )
+      gsap.fromTo(
+        img.current,
+        { scale: 1.2, yPercent: -4 },
+        {
+          scale: 1.1,
+          yPercent: 4,
+          ease: 'none',
+          scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true },
+        },
+      )
+    }, el)
+    return () => ctx.revert()
+  }, [])
+
+  return (
+    <Reveal y={40}>
+      <figure ref={root} className="relative isolate">
+        <div className="absolute -inset-3 -z-10 rounded-[2.5rem] bg-aws/25 blur-3xl" aria-hidden="true" />
+        <div
+          ref={frame}
+          className="relative aspect-[4/3] overflow-hidden rounded-[2rem] border border-white/10 bg-ink-2 md:aspect-[16/9]"
+        >
+          <img
+            ref={img}
+            src={TEAM_PHOTO.src}
+            alt="The Sipna AWS Club team together"
+            loading="lazy"
+            decoding="async"
+            onError={onBad}
+            style={{ objectPosition: TEAM_PHOTO.focus || 'center' }}
+            className="h-full w-full object-cover"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-aws/20 via-transparent to-transparent" />
+          <figcaption className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-linear-to-t from-ink/90 via-ink/40 to-transparent p-5 pt-24 md:p-8 md:pt-32">
+            <div>
+              {TEAM_PHOTO.date && (
+                <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-aws-soft md:text-xs">
+                  {TEAM_PHOTO.date}
+                </span>
+              )}
+              {TEAM_PHOTO.caption && (
+                <p className="mt-1 font-display text-xl font-bold text-white md:text-3xl">{TEAM_PHOTO.caption}</p>
+              )}
+            </div>
+            <span className="hidden shrink-0 items-center gap-2 rounded-full border border-aws/40 bg-aws/15 px-4 py-2 text-sm text-white backdrop-blur sm:inline-flex">
+              <Users size={15} className="text-aws-soft" />
+              {ALL_PEOPLE.length} builders
+            </span>
+          </figcaption>
+        </div>
+      </figure>
+    </Reveal>
   )
 }
 
@@ -114,6 +191,7 @@ function Group({ title, people, filter }) {
 
 export default function Team() {
   const [filter, setFilter] = useState('All')
+  const [photoOk, setPhotoOk] = useState(true)
 
   const domains = useMemo(() => {
     const present = new Set([...CORE_TEAM, ...MEMBERS].map(getDomain))
@@ -126,11 +204,17 @@ export default function Team() {
   return (
     <section id="team" className="relative mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
       <SectionHead
-        eyebrow="The team"
-        title="The Students Behind the Cloud"
+        eyebrow="The students behind the cloud"
+        title="Meet Our Team"
         sub={`${ALL_PEOPLE.length} students from different branches, building the club together.`}
         center
       />
+
+      {TEAM_PHOTO.src && photoOk && (
+        <div className="mt-14">
+          <GroupPhoto onBad={() => setPhotoOk(false)} />
+        </div>
+      )}
 
       <div className="mt-14">
         <Leader />
