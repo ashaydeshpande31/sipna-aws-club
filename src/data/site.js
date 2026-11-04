@@ -13,7 +13,7 @@ export const SITE = {
   founded: '2026-07-01',
 
   // Shown in the footer. Set to '' to hide.
-  credit: 'Ashay Deshpande',
+  credit: 'A.A.S.D',
 
   links: {
     // Paste your Google Form / registration link here. Empty = button shows "coming soon".
