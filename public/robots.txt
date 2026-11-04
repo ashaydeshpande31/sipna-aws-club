@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sipnaawsclub.vercel.app/sitemap.xml
