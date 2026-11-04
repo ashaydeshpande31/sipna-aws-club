@@ -157,11 +157,18 @@ export default function Upcoming() {
                     it first and to get a seat.
                   </p>
                   <div className="mt-8">
-                    <Magnetic>
-                      <button type="button" onClick={() => scrollToId('join')} className={btnPrimary}>
-                        Get notified
-                        <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-                      </button>
+                  <Magnetic>
+                      {SITE.links.whatsapp ? (
+                        <a href={SITE.links.whatsapp} target="_blank" rel="noopener noreferrer" className={btnPrimary}>
+                          Get notified
+                          <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                        </a>
+                      ) : (
+                        <button type="button" onClick={() => scrollToId('join')} className={btnPrimary}>
+                          Get notified
+                          <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                        </button>
+                      )}
                     </Magnetic>
                   </div>
                 </div>
