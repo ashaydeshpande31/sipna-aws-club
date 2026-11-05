@@ -27,6 +27,7 @@ export const SITE = {
   },
 }
 
+export const JOIN_URL = SITE.links.joinForm || SITE.links.whatsapp
 // ---------- Text carried over word-for-word from the previous AWS Club site ----------
 
 export const HERO = {
@@ -141,6 +142,6 @@ export const FAQ = [
   },
   {
     q: 'How do I join?',
-    a: 'Use the Join button on this page to fill the registration form. Then follow our updates for the next event.',
+    a: 'Use the Join button on this page to join our WhatsApp community. You will get every update about the next event there.',
   },
 ]
