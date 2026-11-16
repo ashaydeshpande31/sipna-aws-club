@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
-import { Menu, X } from 'lucide-react'
-import { gsap, ScrollTrigger, lockScroll, scrollToId, reducedMotion } from '../lib/scroll'
+import { ArrowRight } from 'lucide-react'
+import { gsap, ScrollTrigger, scrollToId, reducedMotion } from '../lib/scroll'
 import LogoMark from './ui/LogoMark'
 import { SITE } from '../data/site'
 
+// Same links on mobile and desktop (no hamburger menu).
+// Each one scrolls to the section with that id.
 const LINKS = [
   ['About', 'about'],
   ['Journey', 'journey'],
@@ -14,10 +16,10 @@ const LINKS = [
 ]
 
 export default function Nav({ ready }) {
-  const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [active, setActive] = useState('')
   const root = useRef(null)
+  const list = useRef(null)
   const bar = useRef(null)
 
   // entrance + scroll progress bar
@@ -70,18 +72,15 @@ export default function Nav({ ready }) {
     return () => io.disconnect()
   }, [])
 
-  // only lock while the mobile menu is open (never on first mount, the loader owns the lock then)
+  // on phones the link row scrolls sideways: keep the active link in view
   useEffect(() => {
-    if (!open) return
-    lockScroll(true)
-    return () => lockScroll(false)
-  }, [open])
+    const el = list.current?.querySelector('[data-active="true"]')
+    if (el) el.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' })
+  }, [active])
 
   const go = (id) => (e) => {
     e.preventDefault()
-    setOpen(false)
-    // wait a tick so the menu can unlock scrolling first
-    setTimeout(() => scrollToId(id), 60)
+    scrollToId(id)
   }
 
   return (
@@ -93,80 +92,65 @@ export default function Nav({ ready }) {
         />
       </div>
 
-      <header ref={root} className="fixed inset-x-0 top-4 z-[65] flex justify-center px-4">
+      <header ref={root} className="fixed inset-x-0 top-3 z-[65] flex justify-center px-2.5 sm:top-4 sm:px-4">
         <nav
           aria-label="Main"
-          className={`flex w-full max-w-4xl items-center justify-between rounded-full border px-3 py-2 pl-4 transition-all duration-500 ${
+          className={`flex w-full max-w-4xl items-center justify-between gap-1 rounded-full border py-1.5 pl-2.5 pr-1.5 transition-all duration-500 sm:gap-3 sm:py-2 sm:pl-4 sm:pr-2 ${
             scrolled
               ? 'border-aws/30 bg-ink/80 shadow-[0_10px_40px_-10px_rgba(140,79,255,0.45)] backdrop-blur-xl'
               : 'border-white/10 bg-ink/40 backdrop-blur-md'
           }`}
         >
-          <a href="#home" onClick={go('home')} className="flex items-center gap-2.5" aria-label={`${SITE.name} home`}>
-            <LogoMark className="h-8 w-8" />
-            <span className="font-display text-sm font-semibold tracking-tight text-white">
+          {/* left: logo + name (name hides on very small phones) */}
+          <a
+            href="#home"
+            onClick={go('home')}
+            className="flex shrink-0 items-center gap-2.5"
+            aria-label={`${SITE.name} home`}
+          >
+            <LogoMark className="h-7 w-7 sm:h-8 sm:w-8" />
+            <span className="font-display hidden text-sm font-semibold tracking-tight text-white sm:inline">
               {SITE.name}
             </span>
           </a>
 
-          <ul className="hidden items-center gap-1 md:flex">
+          {/* centre: always visible, a dot marks the active section */}
+          <ul
+            ref={list}
+            className="flex min-w-0 flex-1 items-center justify-start overflow-x-auto [scrollbar-width:none] sm:justify-center sm:gap-1 [&::-webkit-scrollbar]:hidden"
+          >
             {LINKS.map(([label, id]) => (
               <li key={id}>
                 <a
                   href={`#${id}`}
                   onClick={go(id)}
-                  className={`rounded-full px-3.5 py-2 text-sm transition-colors ${
-                    active === id ? 'bg-aws/20 text-white' : 'text-white/60 hover:text-white'
+                  data-active={active === id}
+                  className={`relative block rounded-full px-2.5 py-2 text-[13px] transition-colors sm:px-3.5 sm:text-sm ${
+                    active === id ? 'text-white' : 'text-white/55 hover:text-white'
                   }`}
                 >
                   {label}
+                  <span
+                    className={`absolute bottom-0.5 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-aws-soft transition-all duration-300 ${
+                      active === id ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
+                    }`}
+                  />
                 </a>
               </li>
             ))}
           </ul>
 
-          <div className="flex items-center gap-2">
-            <a
-              href="#join"
-              onClick={go('join')}
-              className="hidden rounded-full bg-aws px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-aws-soft hover:text-ink sm:inline-block"
-            >
-              Join Club
-            </a>
-            <button
-              type="button"
-              onClick={() => setOpen((v) => !v)}
-              aria-expanded={open}
-              aria-label={open ? 'Close menu' : 'Open menu'}
-              className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/5 text-white md:hidden"
-            >
-              {open ? <X size={18} /> : <Menu size={18} />}
-            </button>
-          </div>
+          {/* right: white pill button */}
+          <a
+            href="#join"
+            onClick={go('join')}
+            className="group flex shrink-0 items-center gap-1 rounded-full bg-white px-3 py-2 text-xs font-semibold text-ink transition-colors hover:bg-aws-soft sm:gap-1.5 sm:px-4 sm:text-sm"
+          >
+            Join<span className="hidden sm:inline">&nbsp;Club</span>
+            <ArrowRight size={14} className="hidden transition-transform group-hover:translate-x-0.5 min-[400px]:block" />
+          </a>
         </nav>
       </header>
-
-      {/* mobile menu */}
-      <div
-        className={`fixed inset-0 z-[64] flex flex-col justify-center gap-2 bg-ink/95 px-8 backdrop-blur-2xl transition-all duration-500 md:hidden ${
-          open ? 'visible opacity-100' : 'invisible opacity-0'
-        }`}
-      >
-        {[...LINKS, ['Join', 'join']].map(([label, id], i) => (
-          <a
-            key={id}
-            href={`#${id}`}
-            onClick={go(id)}
-            style={{ transitionDelay: open ? `${i * 60}ms` : '0ms' }}
-            className={`font-display text-4xl font-bold text-white transition-all duration-500 ${
-              open ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
-            }`}
-          >
-            <span className="mr-3 font-mono text-sm text-aws-soft">0{i + 1}</span>
-            {label}
-          </a>
-        ))}
-      </div>
     </>
   )
 }
