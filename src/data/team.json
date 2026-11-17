@@ -1,0 +1,275 @@
+{
+  "photo": {
+    "caption": "The Sipna AWS Club family",
+    "date": "",
+    "focus": "center 30%"
+  },
+  "leader": {
+    "name": "Ayushi Sawarkar",
+    "position": "AWS SBGL",
+    "department": "Information Technology",
+    "year": "3rd Year",
+    "socials": {
+      "linkedin": "https://www.linkedin.com/in/ayushi-sawarkar-460977343",
+      "github": "https://github.com/Ayushi-588",
+      "instagram": "https://www.instagram.com/_sawarkar_ayushi_"
+    },
+    "photo": "ayushi.jpg"
+  },
+  "core": [
+    {
+      "name": "Vrushabh Shelokar",
+      "position": "Technical Lead",
+      "department": "Computer Science & Engineering",
+      "year": "3rd Year",
+      "socials": {
+        "linkedin": "https://www.linkedin.com/in/vrushabh-shelokar/",
+        "github": "https://github.com/vrushabhshelokar",
+        "instagram": "https://www.instagram.com/vrush_1337/"
+      },
+      "photo": "vrushabh.jpg"
+    },
+    {
+      "name": "Yash Papadkar",
+      "position": "Management Lead",
+      "department": "Information Technology",
+      "year": "3rd Year",
+      "socials": {
+        "linkedin": "https://www.linkedin.com/in/yash-papadkar-95a155333/",
+        "github": "https://github.com/The-Yash37",
+        "instagram": "https://www.instagram.com/yash_papadkar_"
+      },
+      "photo": "yash.jpg"
+    },
+    {
+      "name": "Harsh Rahate",
+      "position": "Design Lead",
+      "department": "Information Technology",
+      "year": "3rd Year",
+      "socials": {
+        "linkedin": "https://www.linkedin.com/in/harshrahate/",
+        "github": "https://github.com/harshrahate09",
+        "instagram": "https://www.instagram.com/rahateharsh09"
+      },
+      "photo": "harsh.jpg"
+    },
+    {
+      "name": "Shrushti Deshbhratar",
+      "position": "Marketing Lead",
+      "department": "Information Technology",
+      "year": "3rd Year",
+      "socials": {
+        "linkedin": "https://www.linkedin.com/in/shrushti-deshbhratar-7127b3422",
+        "github": "https://github.com/the-shrushti01",
+        "instagram": ""
+      },
+      "photo": "shrushti.jpg"
+    },
+    {
+      "name": "Aditya Rathod",
+      "position": "Content & Social Media Lead",
+      "department": "Civil Engineering",
+      "year": "3rd Year",
+      "socials": {
+        "linkedin": "https://www.linkedin.com/in/aditya-rathod-04125b333",
+        "github": "",
+        "instagram": "https://www.instagram.com/_ur_adiii_17"
+      },
+      "photo": "aditya.jpg"
+    },
+    {
+      "name": "Harshdeep Sontakke",
+      "position": "Sponsorship Lead",
+      "department": "Computer Science & Engineering",
+      "year": "2nd Year",
+      "socials": {
+        "linkedin": "https://www.linkedin.com/in/harshdeep-sontakke-026879389",
+        "github": "https://github.com/Harshdeep7107",
+        "instagram": "https://www.instagram.com/_its_harshdeep"
+      },
+      "photo": "harshdeep.jpg"
+    }
+  ],
+  "members": [
+    {
+      "name": "Vidhi Manjare",
+      "position": "Team Member (Event Management)",
+      "department": "Information Technology",
+      "year": "3rd Year",
+      "socials": {
+        "linkedin": "https://www.linkedin.com/in/vidhi-manjare-5b3810393",
+        "github": "https://github.com/manjarevidhi-del",
+        "instagram": "https://www.instagram.com/manjarevidhi"
+      },
+      "photo": "vidhi.jpg"
+    },
+    {
+      "name": "Chinmay Barad",
+      "position": "Team Member",
+      "department": "Information Technology",
+      "year": "3rd Year",
+      "socials": {
+        "linkedin": "https://www.linkedin.com/in/chinmay-barad-ab51b8342",
+        "github": "",
+        "instagram": "https://www.instagram.com/chinmay.xii"
+      },
+      "photo": "chinmay.jpg"
+    },
+    {
+      "name": "Krutika Bonde",
+      "position": "Team Member",
+      "department": "Information Technology",
+      "year": "3rd Year",
+      "socials": {
+        "linkedin": "https://www.linkedin.com/in/krutika-bonde-358569332",
+        "github": "https://github.com/krutikabonde29-maker",
+        "instagram": "https://www.instagram.com/krutika_bonde_29"
+      },
+      "photo": "krutika.jpg"
+    },
+    {
+      "name": "Aman Nakashe",
+      "position": "Team Member (Technical)",
+      "department": "Information Technology",
+      "year": "3rd Year",
+      "socials": {
+        "linkedin": "https://www.linkedin.com/in/aman-nakashe12/",
+        "github": "https://github.com/workamannakashe-sudo",
+        "instagram": "https://www.instagram.com/amannakashe.12/"
+      },
+      "photo": "aman.jpg"
+    },
+    {
+      "name": "Ritesh Pawar",
+      "position": "Team Member (Event Management)",
+      "department": "Information Technology",
+      "year": "3rd Year",
+      "socials": {
+        "linkedin": "https://www.linkedin.com/in/ritesh-pawar-694730353",
+        "github": "https://github.com/riteshpawar26",
+        "instagram": "https://www.instagram.com/ritesh_deshmukh_26"
+      },
+      "photo": "ritesh.jpg"
+    },
+    {
+      "name": "Prajakta Dhole",
+      "position": "Team Member (Design)",
+      "department": "Computer Science & Engineering",
+      "year": "3rd Year",
+      "socials": {
+        "linkedin": "https://www.linkedin.com/in/prajakta-dhole-b0376a380",
+        "github": "https://github.com/Prajakta05-abc",
+        "instagram": "https://www.instagram.com/prajakta._.05"
+      },
+      "photo": "prajakta.jpg"
+    },
+    {
+      "name": "Devanshu Ghawat",
+      "position": "Team Member",
+      "department": "Information Technology",
+      "year": "3rd Year",
+      "socials": {
+        "linkedin": "https://www.linkedin.com/in/devanshu-d-ghawat-07a5813a6",
+        "github": "https://github.com/devanshughawat",
+        "instagram": "https://www.instagram.com/ghawatdevanshu"
+      },
+      "photo": "devanshu.jpg"
+    },
+    {
+      "name": "Riya Surushe",
+      "position": "Team Member (Design)",
+      "department": "AI & Data Science",
+      "year": "3rd Year",
+      "socials": {
+        "linkedin": "https://www.linkedin.com/in/riya-surushe-49131b350",
+        "github": "https://github.com/Riya-1210",
+        "instagram": "https://www.instagram.com/riya_surushe_09"
+      },
+      "photo": "riya.jpg"
+    },
+    {
+      "name": "Parth Gadekar",
+      "position": "Team Member",
+      "department": "Information Technology",
+      "year": "2nd Year",
+      "socials": {
+        "linkedin": "https://www.linkedin.com/in/parth-gadekar-488882389",
+        "github": "",
+        "instagram": "https://www.instagram.com/parthgadekar316"
+      },
+      "photo": "parth.jpg"
+    },
+    {
+      "name": "Ganesh Satone",
+      "position": "Team Member (Event Management)",
+      "department": "Information Technology",
+      "year": "2nd Year",
+      "socials": {
+        "linkedin": "https://www.linkedin.com/in/ganesh-satone-44b657381",
+        "github": "",
+        "instagram": "https://www.instagram.com/___ganuuu_____"
+      },
+      "photo": "ganesh.jpg"
+    },
+    {
+      "name": "Ashay Deshpande",
+      "position": "Team Member (Event Management)",
+      "department": "Information Technology",
+      "year": "2nd Year",
+      "socials": {
+        "linkedin": "https://www.linkedin.com/in/ashay-deshpande-554683387",
+        "github": "https://github.com/ashaydeshpande31",
+        "instagram": "https://www.instagram.com/iam_ashay8"
+      },
+      "photo": "ashay.jpg"
+    },
+    {
+      "name": "Ansh Gautam",
+      "position": "Team Member (Technical)",
+      "department": "Information Technology",
+      "year": "2nd Year",
+      "socials": {
+        "linkedin": "https://www.linkedin.com/in/ansh-gautam-7a248b382",
+        "github": "https://github.com/anshgautam347-hash",
+        "instagram": "https://www.instagram.com/ansh_gautam62"
+      },
+      "photo": "ansh.jpg"
+    },
+    {
+      "name": "Ishwari Umekar",
+      "position": "Team Member (Publicity)",
+      "department": "Information Technology",
+      "year": "2nd Year",
+      "socials": {
+        "linkedin": "https://www.linkedin.com/in/ishwari-shankarrao-umekar-1936a1387",
+        "github": "",
+        "instagram": "https://www.instagram.com/_umekarsishwari_07"
+      },
+      "photo": "ishwari.jpg"
+    },
+    {
+      "name": "Niyati Dhanokar",
+      "position": "Team Member (Technical)",
+      "department": "Information Technology",
+      "year": "2nd Year",
+      "socials": {
+        "linkedin": "https://www.linkedin.com/in/niyati-dhanokar-78b26627a",
+        "github": "https://github.com/niyatidhanokar",
+        "instagram": "https://www.instagram.com/niyu.era"
+      },
+      "photo": "niyati.jpg"
+    },
+    {
+      "name": "Gunjan Amgaonkar",
+      "position": "Team Member",
+      "department": "Information Technology",
+      "year": "2nd Year",
+      "socials": {
+        "linkedin": "https://www.linkedin.com/in/gunjan-amgaonkar-879baa387",
+        "github": "",
+        "instagram": "https://www.instagram.com/iam_gunjan04"
+      },
+      "photo": "gunjan.jpg"
+    }
+  ]
+}

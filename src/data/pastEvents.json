@@ -1,0 +1,48 @@
+[
+  {
+    "id": "inauguration",
+    "title": "Club Inauguration",
+    "category": "Launch",
+    "date": "3 August 2026",
+    "description": "The day Sipna AWS Club officially began: our first gathering of students curious about cloud computing.",
+    "participants": 150,
+    "highlights": [
+      "Chief guest talk",
+      "Club roadmap revealed"
+    ],
+    "instagram": "https://www.instagram.com/reel/DbtNDtDzJZ8/?vrfl=MWI2cm9tdTVpaG9waw=="
+  },
+  {
+    "id": "codorithm-2k26",
+    "title": "Codorithm 2K26-A",
+    "category": "Competition",
+    "date": "8 Sep 2026",
+    "description": "Our first competition, where students put their problem-solving skills to the test and battled for the podium.",
+    "participants": 193,
+    "highlights": [
+      "Coding questions held on the HackerRank platform",
+      "193 participants from different branches",
+      "10:30 AM to 5:30 PM at the Department of Information Technology, Sipna COET",
+      "Cash prizes of ₹11,000, ₹9,000 and ₹7,000 with memento and certificate"
+    ],
+    "youtube": ""
+  },
+  {
+    "id": "portfolio-hosting",
+    "title": "Host Your Portfolio on AWS",
+    "category": "Online Workshop",
+    "date": "1 Nov 2026",
+    "description": "A hands-on online workshop where students took their portfolio websites live on the internet using Amazon S3.",
+    "participants": 0,
+    "highlights": [
+      "Hosted a portfolio website using Amazon S3",
+      "Configured static website hosting on AWS",
+      "Deployed the website and got a live URL",
+      "Speaker: Aishwary Gathe, DevRel @ meetio, Community Builder with 3+ years of experience",
+      "Online on Google Meet at 8:00 PM",
+      "E-certificates for participants who met the attendance requirement"
+    ],
+    "youtube": "",
+    "instagram": ""
+  }
+]
