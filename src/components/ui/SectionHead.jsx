@@ -1,4 +1,5 @@
 import { Reveal, SplitText } from './motion'
+import Scramble from './Scramble'
 
 /** Standard section heading: small eyebrow, big animated title, optional sub-text. */
 export default function SectionHead({ eyebrow, title, sub, center = false, className = '' }) {
@@ -7,7 +8,7 @@ export default function SectionHead({ eyebrow, title, sub, center = false, class
       <Reveal y={16}>
         <span className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.22em] text-aws-soft">
           <span className="h-px w-8 bg-aws-soft/60" />
-          {eyebrow}
+          <Scramble text={eyebrow} />
         </span>
       </Reveal>
       <SplitText

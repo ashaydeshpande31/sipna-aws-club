@@ -7,6 +7,7 @@ import Nav from './components/Nav'
 import Footer from './components/Footer'
 import EventModal from './components/EventModal'
 import Terminal from './components/Terminal'
+import FX from './components/FX'
 
 import Hero from './components/sections/Hero'
 import Marquee from './components/sections/Marquee'
@@ -75,6 +76,7 @@ export default function App() {
     <div className="grain relative">
       <Loader onDone={() => setReady(true)} />
       <Atmosphere />
+      <FX ready={ready} />
       <Nav ready={ready} />
 
       <main className="relative z-10">

@@ -14,6 +14,7 @@ import {
 import { gsap, lockScroll, reducedMotion } from '../lib/scroll'
 import { youtubeId } from '../lib/eventMedia'
 import EventCover from './ui/EventCover'
+import ShareButton from './ui/ShareButton'
 
 /** Pop-up for one past event: a Video tab and a Photos tab. */
 export default function EventModal({ event, onClose }) {
@@ -29,6 +30,10 @@ export default function EventModal({ event, onClose }) {
   const panel = useRef(null)
   const closeBtn = useRef(null)
   const touchX = useRef(null)
+  const touchY = useRef(null)
+  const imgRef = useRef(null)
+  const dirRef = useRef(0)
+  const dragging = useRef(false)
   const closing = useRef(false)
 
   const close = useCallback(() => {
@@ -42,6 +47,7 @@ export default function EventModal({ event, onClose }) {
   const step = useCallback(
     (d) => {
       if (!photos.length) return
+      dirRef.current = d
       setIdx((i) => (i + d + photos.length) % photos.length)
     },
     [photos.length],
@@ -101,11 +107,50 @@ export default function EventModal({ event, onClose }) {
     if (t && t.scrollIntoView) t.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' })
   }, [idx, tab])
 
+  // new photo slides in from the side it was swiped to
+  useEffect(() => {
+    if (tab !== 'photos' || !imgRef.current || reducedMotion()) return
+    gsap.fromTo(
+      imgRef.current,
+      { x: dirRef.current * 70, opacity: 0 },
+      { x: 0, opacity: 1, duration: 0.35, ease: 'power3.out' },
+    )
+  }, [idx, tab])
+
+  // load the next and previous photos early so swiping never waits
+  useEffect(() => {
+    if (tab !== 'photos' || photos.length < 2) return
+    ;[(idx + 1) % photos.length, (idx - 1 + photos.length) % photos.length].forEach((i) => {
+      const im = new Image()
+      im.src = photos[i]
+    })
+  }, [idx, tab, photos])
+
+  // the photo follows your finger while you drag, then snaps or flips on release
+  const onTouchStart = (e) => {
+    touchX.current = e.touches[0].clientX
+    touchY.current = e.touches[0].clientY
+    dragging.current = false
+  }
+  const onTouchMove = (e) => {
+    if (touchX.current == null || !imgRef.current || photos.length < 2) return
+    const dx = e.touches[0].clientX - touchX.current
+    const dy = e.touches[0].clientY - touchY.current
+    if (!dragging.current && Math.abs(dx) < 10) return
+    if (!dragging.current && Math.abs(dy) > Math.abs(dx)) return
+    dragging.current = true
+    gsap.set(imgRef.current, { x: dx * 0.9 })
+  }
   const onTouchEnd = (e) => {
     if (touchX.current == null) return
     const dx = e.changedTouches[0].clientX - touchX.current
     touchX.current = null
-    if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1)
+    if (dragging.current && Math.abs(dx) > 60 && photos.length > 1) {
+      step(dx < 0 ? 1 : -1)
+    } else if (imgRef.current) {
+      gsap.to(imgRef.current, { x: 0, duration: 0.3, ease: 'power3.out' })
+    }
+    dragging.current = false
   }
 
   const tabBtn = (id, label, Icon, count) => (
@@ -213,11 +258,15 @@ export default function EventModal({ event, onClose }) {
               (photos.length ? (
                 <div
                   className="absolute inset-0 select-none"
-                  onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
+                  style={{ touchAction: 'pan-y' }}
+                  onTouchStart={onTouchStart}
+                  onTouchMove={onTouchMove}
                   onTouchEnd={onTouchEnd}
                 >
                   <img
+                    ref={imgRef}
                     key={photos[idx]}
+                    decoding="async"
                     src={photos[idx]}
                     alt={`${event.title}: photo ${idx + 1} of ${photos.length}`}
                     className="h-full w-full object-contain"
@@ -260,7 +309,10 @@ export default function EventModal({ event, onClose }) {
                   key={src}
                   type="button"
                   data-thumb={i}
-                  onClick={() => setIdx(i)}
+                  onClick={() => {
+                    dirRef.current = i > idx ? 1 : -1
+                    setIdx(i)
+                  }}
                   aria-label={`Show photo ${i + 1}`}
                   aria-current={i === idx}
                   className={`h-14 w-20 shrink-0 overflow-hidden rounded-lg border-2 transition-all ${
@@ -295,6 +347,13 @@ export default function EventModal({ event, onClose }) {
           </div>
 
           <p className="mt-5 leading-relaxed text-white/70">{event.description}</p>
+
+          <ShareButton
+            title={event.title}
+            text={`${event.title}${event.date ? ` (${event.date})` : ''} at Sipna AWS Club`}
+            label="Share this event"
+            className="mt-6"
+          />
 
           {event.highlights && event.highlights.length > 0 && (
             <ul className="mt-6 space-y-2.5">

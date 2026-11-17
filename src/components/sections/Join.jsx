@@ -72,7 +72,7 @@ export default function Join() {
               <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
                 <Magnetic>
                   {joinForm ? (
-                    <a href={joinForm} target="_blank" rel="noopener noreferrer" className={btnPrimary}>
+                    <a href={joinForm} target="_blank" rel="noopener noreferrer" data-confetti className={btnPrimary}>
                       Join Sipna AWS Club
                       <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
                     </a>
@@ -87,7 +87,7 @@ export default function Join() {
                 </Magnetic>
                 {whatsapp && (
                   <Magnetic>
-                    <a href={whatsapp} target="_blank" rel="noopener noreferrer" className={btnGhost}>
+                    <a href={whatsapp} target="_blank" rel="noopener noreferrer" data-confetti className={btnGhost}>
                       <FaWhatsapp size={17} />
                       WhatsApp community
                     </a>

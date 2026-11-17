@@ -14,6 +14,8 @@ const CLOUD_VERT = /* glsl */ `
   uniform float uProgress;
   uniform float uPixelRatio;
   uniform vec2 uMouse;
+  uniform float uScroll;
+  uniform float uBurst;
   attribute vec3 aStart;
   attribute float aSeed;
   attribute float aSize;
@@ -31,6 +33,11 @@ const CLOUD_VERT = /* glsl */ `
     vec3 pos = mix(aStart, position, p);
     float t = uTime * 0.6 + aSeed * 40.0;
     pos += vec3(sin(t), cos(t * 1.3), sin(t * 0.7)) * 0.06 * p;
+
+    // scrolling pulls the cloud apart, a click sends a shockwave outward
+    vec2 dir = normalize(pos.xy + vec2(0.0001));
+    pos.xy += dir * (uScroll * 3.2 + uBurst * 1.1 * (0.5 + aSeed));
+    pos.z += (aSeed - 0.5) * uScroll * 6.0;
 
     vec4 world = modelMatrix * vec4(pos, 1.0);
 
@@ -237,6 +244,8 @@ export default function CloudScene({ ready }) {
         uProgress: { value: calm ? 1 : 0 },
         uPixelRatio: { value: dpr },
         uMouse: { value: new THREE.Vector2(999, 999) },
+        uScroll: { value: 0 },
+        uBurst: { value: 0 },
       },
     })
     const cloud = new THREE.Points(cloudGeo, cloudMat)
@@ -341,7 +350,46 @@ export default function CloudScene({ ready }) {
     const onLeave = () => {
       pointerActive = false
     }
+    // a click on the hero (not on a button or link) sends a shockwave through the cloud
+    let burst = 0
+    const onDown = (e) => {
+      if (e.target.closest && e.target.closest('a,button')) return
+      const r = el.getBoundingClientRect()
+      if (e.clientY < r.top || e.clientY > r.bottom) return
+      burst = 1
+    }
+    let scrollCur = 0
+
+    // phones: the cloud leans as you tilt the phone (iPhones ask permission after the first tap)
+    const coarse = window.matchMedia('(pointer: coarse)').matches
+    let tiltOn = false
+    const clamp = THREE.MathUtils.clamp
+    const onTilt = (e) => {
+      if (e.gamma == null || e.beta == null) return
+      mouseNdc.set(clamp(e.gamma / 25, -1, 1), -clamp((e.beta - 50) / 30, -1, 1))
+    }
+    const startTilt = () => {
+      if (!coarse || calm || tiltOn || !window.DeviceOrientationEvent) return
+      const D = window.DeviceOrientationEvent
+      if (typeof D.requestPermission === 'function') {
+        D.requestPermission()
+          .then((r) => {
+            if (r === 'granted') {
+              tiltOn = true
+              window.addEventListener('deviceorientation', onTilt)
+            }
+          })
+          .catch(() => {})
+      } else {
+        tiltOn = true
+        window.addEventListener('deviceorientation', onTilt)
+      }
+    }
+    if (coarse && !(window.DeviceOrientationEvent && typeof window.DeviceOrientationEvent.requestPermission === 'function')) startTilt()
+    window.addEventListener('click', startTilt, { once: true })
+
     window.addEventListener('pointermove', onMove, { passive: true })
+    window.addEventListener('pointerdown', onDown, { passive: true })
     document.addEventListener('pointerleave', onLeave)
 
     // --- loop ---
@@ -355,12 +403,21 @@ export default function CloudScene({ ready }) {
       cloudMat.uniforms.uTime.value = t
       nodeMat.uniforms.uTime.value = t
 
+      // scroll and click reaction
+      const sp = THREE.MathUtils.clamp(window.scrollY / (el.clientHeight || 1), 0, 1.2)
+      scrollCur += (sp - scrollCur) * 0.08
+      burst *= 0.94
+      cloudMat.uniforms.uScroll.value = scrollCur
+      cloudMat.uniforms.uBurst.value = burst
+
       // smooth parallax
       cur.lerp(mouseNdc, 0.05)
       net.rotation.y = t * 0.05 + cur.x * 0.35
       net.rotation.x = -cur.y * 0.2
       cloud.rotation.y = cur.x * 0.18
       cloud.rotation.x = -cur.y * 0.1
+      cloud.rotation.z = scrollCur * 0.6
+      net.rotation.z = -scrollCur * 0.5
 
       // cursor position in world space (z = 0 plane)
       const aspect = camera.aspect
@@ -432,6 +489,9 @@ export default function CloudScene({ ready }) {
       io.disconnect()
       ro.disconnect()
       window.removeEventListener('pointermove', onMove)
+      window.removeEventListener('pointerdown', onDown)
+      window.removeEventListener('deviceorientation', onTilt)
+      window.removeEventListener('click', startTilt)
       document.removeEventListener('pointerleave', onLeave)
       cloudGeo.dispose()
       cloudMat.dispose()

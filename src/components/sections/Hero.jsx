@@ -5,6 +5,7 @@ import { SplitText, Magnetic } from '../ui/motion'
 import { HERO } from '../../data/site'
 import { UPCOMING_EVENT } from '../../data/events'
 import { btnPrimary, btnGhost } from '../../lib/ui'
+import FloatingServices from '../ui/FloatingServices'
 
 // three.js is large, so it loads in its own chunk while the intro plays
 const CloudScene = lazy(() => import('../three/CloudScene'))
@@ -57,6 +58,7 @@ export default function Hero({ ready }) {
       <Suspense fallback={null}>
         <CloudScene ready={ready} />
       </Suspense>
+      <FloatingServices ready={ready} />
 
       <div className="relative z-10 mx-auto flex min-h-svh max-w-7xl flex-col justify-end px-5 pb-24 pt-32 md:justify-center md:px-8 md:pb-20">
         <div ref={content} className="max-w-2xl">
@@ -84,7 +86,7 @@ export default function Hero({ ready }) {
 
           <div data-in className="mt-9 flex flex-wrap items-center gap-4">
             <Magnetic>
-              <a href="#join" onClick={go('join')} className={btnPrimary}>
+              <a href="#join" onClick={go('join')} data-confetti className={btnPrimary}>
                 Join the Club
                 <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
               </a>

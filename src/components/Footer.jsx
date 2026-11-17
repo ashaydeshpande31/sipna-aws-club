@@ -1,6 +1,7 @@
 import { Heart, MapPin, Terminal as TerminalIcon } from 'lucide-react'
 import LogoMark from './ui/LogoMark'
 import Socials from './ui/Socials'
+import ShareButton from './ui/ShareButton'
 import { scrollToId } from '../lib/scroll'
 import { SITE } from '../data/site'
 
@@ -66,6 +67,12 @@ export default function Footer({ onTerminal }) {
           <div>
             <h4 className="font-mono text-xs uppercase tracking-[0.2em] text-aws-soft">Follow us</h4>
             <Socials links={SITE.links} label={SITE.name} className="mt-4" />
+            <ShareButton
+              title={SITE.name}
+              text={`Check out ${SITE.name}, the AWS Student Builder Group at Sipna COET, Amravati!`}
+              label="Share this site"
+              className="mt-4"
+            />
             <button
               type="button"
               onClick={onTerminal}

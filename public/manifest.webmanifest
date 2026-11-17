@@ -1,0 +1,16 @@
+{
+  "name": "Sipna AWS Club",
+  "short_name": "AWS Club",
+  "description": "AWS Student Builder Group at Sipna COET, Amravati. Workshops, competitions and a community of cloud builders.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0614",
+  "theme_color": "#0a0614",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

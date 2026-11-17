@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { gsap, reducedMotion, finePointer } from '../../lib/scroll'
+import { confetti } from '../../lib/fx'
 
 /** Fades + lifts its children in when scrolled into view. */
 export function Reveal({
@@ -144,12 +145,24 @@ export function Counter({ to, suffix = '', duration = 1.8 }) {
     }
     const obj = { v: 0 }
     const ctx = gsap.context(() => {
+      gsap.set(el, { display: 'inline-block', transformOrigin: 'left center' })
       gsap.to(obj, {
         v: to,
         duration,
         ease: 'power2.out',
         onUpdate: () => {
           el.textContent = `${Math.round(obj.v)}${suffix}`
+        },
+        // little pop and a few sparks when the number lands
+        onComplete: () => {
+          el.textContent = `${to}${suffix}`
+          gsap.fromTo(
+            el,
+            { scale: 1.3, color: '#ffb84d' },
+            { scale: 1, color: '#ffffff', duration: 0.9, ease: 'elastic.out(1, 0.4)', clearProps: 'color,scale' },
+          )
+          const r = el.getBoundingClientRect()
+          confetti(r.left + r.width / 2, r.top + r.height / 2, { count: 22, spread: 0.55 })
         },
         scrollTrigger: { trigger: el, start: 'top 92%', once: true },
       })

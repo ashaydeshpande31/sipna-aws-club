@@ -13,6 +13,11 @@ import App from './App.jsx'
 const Admin = lazy(() => import('./admin/Admin.jsx'))
 const isAdmin = window.location.pathname.replace(/\/+$/, '') === '/admin'
 
+// lets phones offer "Add to Home screen" (the worker caches nothing, see public/sw.js)
+if (!isAdmin && import.meta.env.PROD && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}))
+}
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     {isAdmin ? (
