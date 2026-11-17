@@ -7,14 +7,12 @@ import { UPCOMING_EVENT } from '../../data/events'
 import { btnPrimary, btnGhost } from '../../lib/ui'
 import FloatingServices from '../ui/FloatingServices'
 
-// three.js is large, so it loads in its own chunk while the intro plays
 const CloudScene = lazy(() => import('../three/CloudScene'))
 
 export default function Hero({ ready }) {
   const root = useRef(null)
   const content = useRef(null)
 
-  // hide the small pieces until the intro finishes, then bring them in
   useEffect(() => {
     if (reducedMotion()) return
     const ctx = gsap.context(() => {
@@ -23,7 +21,12 @@ export default function Hero({ ready }) {
         yPercent: -14,
         opacity: 0.15,
         ease: 'none',
-        scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true },
+        scrollTrigger: {
+          trigger: root.current,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+        },
       })
     }, root)
     return () => ctx.revert()
@@ -51,7 +54,10 @@ export default function Hero({ ready }) {
   }
 
   const nextDate = UPCOMING_EVENT.date
-    ? new Date(UPCOMING_EVENT.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })
+    ? new Date(UPCOMING_EVENT.date).toLocaleDateString('en-IN', {
+        day: 'numeric',
+        month: 'short',
+      })
     : ''
 
   return (
@@ -92,6 +98,7 @@ export default function Hero({ ready }) {
                 <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
               </a>
             </Magnetic>
+
             <Magnetic>
               <a href="/events" onClick={go('events')} className={btnGhost}>
                 See Our Events
