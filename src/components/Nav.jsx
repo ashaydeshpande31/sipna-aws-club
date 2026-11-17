@@ -21,56 +21,40 @@ export default function Nav({ ready }) {
   const root = useRef(null)
   const list = useRef(null)
   const bar = useRef(null)
+  const lock = useRef(0)
 
-  // entrance + scroll progress bar
-  useEffect(() => {
-    const el = root.current
-    if (!el) return
-    const ctx = gsap.context(() => {
-      if (!reducedMotion()) gsap.set(el, { yPercent: -140, opacity: 0 })
-      ScrollTrigger.create({
-        start: 0,
+ // entrance + scroll progress bar
+useEffect(() => {
+  const el = root.current
+  if (!el) return
+
+  const ctx = gsap.context(() => {
+    // phones: bar sits at the bottom
+    // laptops: bar sits at the top
+    const fromBottom = window.matchMedia(
+      '(max-width: 639px)'
+    ).matches
+
+    gsap.to(bar.current, {
+      scaleX: 1,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: el,
+        start: 'top top',
         end: 'max',
+        scrub: true,
         onUpdate: (self) => {
-          if (bar.current) bar.current.style.transform = `scaleX(${self.progress})`
+          if (bar.current) {
+            bar.current.style.transform =
+              `scaleX(${self.progress})`
+          }
         },
-      })
-    })
-    return () => ctx.revert()
-  }, [])
-
-  useEffect(() => {
-    if (!ready || reducedMotion()) return
-    const ctx = gsap.context(() => {
-      gsap.to(root.current, { yPercent: 0, opacity: 1, duration: 1, ease: 'power3.out', delay: 0.4 })
-    })
-    return () => ctx.revert()
-  }, [ready])
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
-  // highlight the section currently in view
-  useEffect(() => {
-    const ids = LINKS.map(([, id]) => id)
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) setActive(e.target.id)
-        })
       },
-      { rootMargin: '-45% 0px -50% 0px' },
-    )
-    ids.forEach((id) => {
-      const s = document.getElementById(id)
-      if (s) io.observe(s)
     })
-    return () => io.disconnect()
-  }, [])
+  })
+
+  return () => ctx.revert()
+}, [])
 
   // on phones the link row scrolls sideways: keep the active link in view
   useEffect(() => {
@@ -80,6 +64,8 @@ export default function Nav({ ready }) {
 
   const go = (id) => (e) => {
     e.preventDefault()
+    setActive(id)
+    lock.current = Date.now() + 1200
     scrollToId(id)
   }
 
@@ -92,7 +78,10 @@ export default function Nav({ ready }) {
         />
       </div>
 
-      <header ref={root} className="fixed inset-x-0 top-3 z-[65] flex justify-center px-2.5 sm:top-4 sm:px-4">
+      <header
+  ref={root}
+  className="fixed inset-x-0 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-[65] flex justify-center px-2.5 sm:bottom-auto sm:top-4 sm:px-4"
+>
         <nav
           aria-label="Main"
           className={`flex w-full max-w-4xl items-center justify-between gap-1 rounded-full border py-1.5 pl-2.5 pr-1.5 transition-all duration-500 sm:gap-3 sm:py-2 sm:pl-4 sm:pr-2 ${
@@ -126,7 +115,9 @@ export default function Nav({ ready }) {
                   onClick={go(id)}
                   data-active={active === id}
                   className={`relative block rounded-full px-2.5 py-2 text-[13px] transition-colors sm:px-3.5 sm:text-sm ${
-                    active === id ? 'text-white' : 'text-white/55 hover:text-white'
+                    active === id
+  ? 'text-white [text-shadow:0_0_14px_rgba(196,167,255,0.9)]'
+  : 'text-white/45 hover:text-white'
                   }`}
                 >
                   {label}

@@ -176,3 +176,9 @@ html.lenis, html.lenis body { height: auto; }
   .marquee-track, .aura { animation: none; }
   * { scroll-behavior: auto !important; }
 }
+/* phones: the nav bar is pinned to the bottom, so leave room under the footer */
+@media (max-width: 639px) {
+  body {
+    padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+  }
+}
