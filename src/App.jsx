@@ -8,6 +8,7 @@ import Footer from './components/Footer'
 import EventModal from './components/EventModal'
 import Terminal from './components/Terminal'
 import FX from './components/FX'
+import BackToTop from './components/BackToTop'
 
 import Hero from './components/sections/Hero'
 import Marquee from './components/sections/Marquee'
@@ -77,6 +78,7 @@ export default function App() {
       <Loader onDone={() => setReady(true)} />
       <Atmosphere />
       <FX ready={ready} />
+      <BackToTop />
       <Nav ready={ready} />
 
       <main className="relative z-10">
