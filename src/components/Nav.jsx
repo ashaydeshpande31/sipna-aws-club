@@ -22,6 +22,7 @@ export default function Nav({ ready }) {
   const list = useRef(null)
   const bar = useRef(null)
   const lock = useRef(0)
+  const [dotX , setDotX] = useState(null)
 
  // entrance + scroll progress bar
 useEffect(() => {
@@ -55,6 +56,45 @@ useEffect(() => {
 
   return () => ctx.revert()
 }, [])
+// work out which section is on screen while scrolling (checks the page on every
+// scroll, so it also works for sections that appear later)
+useEffect(() => {
+  const ids = LINKS.map(([, id]) => id)
+  let frame = 0
+  const update = () => {
+    frame = 0
+    if (Date.now() < lock.current) return
+    const line = window.innerHeight * 0.45
+    let current = ids[0]
+    for (const id of ids) {
+      const el = document.getElementById(id)
+      if (el && el.getBoundingClientRect().top <= line) current = id
+    }
+    setActive(current)
+  }
+  const onScroll = () => {
+    if (!frame) frame = requestAnimationFrame(update)
+  }
+  update()
+  window.addEventListener('scroll', onScroll, { passive: true })
+  window.addEventListener('resize', onScroll)
+  return () => {
+    window.removeEventListener('scroll', onScroll)
+    window.removeEventListener('resize', onScroll)
+    if (frame) cancelAnimationFrame(frame)
+  }
+}, [])
+
+// slide one dot under the active link
+useEffect(() => {
+  const place = () => {
+    const el = list.current?.querySelector('[data-active="true"]')
+    if (el) setDotX(el.offsetLeft + el.offsetWidth / 2)
+  }
+  place()
+  window.addEventListener('resize', place)
+  return () => window.removeEventListener('resize', place)
+}, [active])
 
   // on phones the link row scrolls sideways: keep the active link in view
   useEffect(() => {
@@ -105,32 +145,32 @@ useEffect(() => {
 
           {/* centre: always visible, a dot marks the active section */}
           <ul
-            ref={list}
-            className="flex min-w-0 flex-1 items-center justify-start overflow-x-auto [scrollbar-width:none] sm:justify-center sm:gap-1 [&::-webkit-scrollbar]:hidden"
-          >
-            {LINKS.map(([label, id]) => (
-              <li key={id}>
-                <a
-                  href={`#${id}`}
-                  onClick={go(id)}
-                  data-active={active === id}
-                  className={`relative block rounded-full px-2.5 py-2 text-[13px] transition-colors sm:px-3.5 sm:text-sm ${
-                    active === id
-  ? 'text-white [text-shadow:0_0_14px_rgba(196,167,255,0.9)]'
-  : 'text-white/45 hover:text-white'
-                  }`}
-                >
-                  {label}
-                  <span
-                    className={`absolute bottom-0.5 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-aws-soft transition-all duration-300 ${
-                      active === id ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
-                    }`}
-                  />
-                </a>
-              </li>
-            ))}
-          </ul>
-
+  ref={list}
+  className="relative flex min-w-0 flex-1 items-center justify-start overflow-x-auto [scrollbar-width:none] sm:justify-center sm:gap-1 [&::-webkit-scrollbar]:hidden"
+>
+  {LINKS.map(([label, id]) => (
+    <li key={id}>
+      <a
+        href={`#${id}`}
+        onClick={go(id)}
+        data-active={active === id}
+        className={`relative block rounded-full px-2.5 py-2 text-[13px] transition-colors sm:px-3.5 sm:text-sm ${
+          active === id
+            ? 'text-white [text-shadow:0_0_14px_rgba(196,167,255,0.9)]'
+            : 'text-white/45 hover:text-white'
+        }`}
+      >
+        {label}
+      </a>
+    </li>
+  ))}
+  {/* one dot that glides from link to link */}
+  <li
+    aria-hidden="true"
+    className="pointer-events-none absolute bottom-0.5 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-white shadow-[0_0_8px_rgba(196,167,255,0.9)] transition-[left,opacity] duration-500 ease-out"
+    style={{ left: dotX ?? 0, opacity: dotX == null ? 0 : 1 }}
+  />
+</ul>
           {/* right: white pill button */}
           <a
             href="#join"
