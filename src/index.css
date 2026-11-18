@@ -200,6 +200,6 @@ html.lenis, html.lenis body { height: auto; }
 /* phones: the nav bar is pinned to the bottom, so leave room under the footer */
 @media (max-width: 639px) {
   body {
-    padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
   }
 }

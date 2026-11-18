@@ -14,6 +14,7 @@ const LINKS = [
   ['Upcoming', 'upcoming'],
   ['Team', 'team'],
   ['Learn', 'learn'],
+  ['Connect', 'connect'],
 ]
 
 export default function Nav({ ready }) {
@@ -122,7 +123,7 @@ export default function Nav({ ready }) {
 
       <header
         ref={root}
-        className="fixed inset-x-0 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-[65] flex justify-center px-2.5 sm:bottom-auto sm:top-4 sm:px-4"
+        className="fixed inset-x-0 top-4 z-[65] hidden justify-center px-4 sm:flex"
       >
         <nav
           aria-label="Main"

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import {
   ScrollTrigger,
   initSmoothScroll,
@@ -14,25 +14,69 @@ import { SITE } from './data/site'
 import Loader from './components/Loader'
 import Atmosphere from './components/Atmosphere'
 import Nav from './components/Nav'
+import MobileDock from './components/MobileDock'
 import Footer from './components/Footer'
-import EventModal from './components/EventModal'
-import Terminal from './components/Terminal'
 import FX from './components/FX'
 import BackToTop from './components/BackToTop'
 
 import Hero from './components/sections/Hero'
 import Marquee from './components/sections/Marquee'
 import Stats from './components/sections/Stats'
-import About from './components/sections/About'
-import Benefits from './components/sections/Benefits'
-import Journey from './components/sections/Journey'
-import EventsReel from './components/sections/EventsReel'
-import Winners from './components/sections/Winners'
-import Upcoming from './components/sections/Upcoming'
-import Team from './components/sections/Team'
-import Learn from './components/sections/Learn'
-import Join from './components/sections/Join'
-import Explore from './components/sections/Explore'
+import NextUp from './components/sections/NextUp'
+import { AboutPreview, JourneyPreview, LearnPreview } from './components/sections/HomePreviews'
+
+
+// Every page except Home loads its own small chunk of code when it is first needed, so the first visit
+// downloads less. After the intro, the other pages are fetched quietly in the background (see below),
+// so clicking a link is still instant.
+function Refresh() {
+  useEffect(() => {
+    const t = setTimeout(() => ScrollTrigger.refresh(), 150)
+    return () => clearTimeout(t)
+  }, [])
+  return null
+}
+const LOADERS = {
+  About: () => import('./components/sections/About'),
+  Benefits: () => import('./components/sections/Benefits'),
+  Journey: () => import('./components/sections/Journey'),
+  EventsReel: () => import('./components/sections/EventsReel'),
+  Winners: () => import('./components/sections/Winners'),
+  Upcoming: () => import('./components/sections/Upcoming'),
+  Team: () => import('./components/sections/Team'),
+  Learn: () => import('./components/sections/Learn'),
+  Faq: () => import('./components/sections/Faq'),
+  Connect: () => import('./components/sections/Connect'),
+  Join: () => import('./components/sections/Join'),
+  EventModal: () => import('./components/EventModal'),
+}
+const lazyPage = (load) =>
+  lazy(() =>
+    load().then((m) => {
+      const Page = m.default
+      return {
+        default: (props) => (
+          <>
+            <Page {...props} />
+            <Refresh />
+          </>
+        ),
+      }
+    }),
+  )
+const About = lazyPage(LOADERS.About)
+const Benefits = lazyPage(LOADERS.Benefits)
+const Journey = lazyPage(LOADERS.Journey)
+const EventsReel = lazyPage(LOADERS.EventsReel)
+const Winners = lazyPage(LOADERS.Winners)
+const Upcoming = lazyPage(LOADERS.Upcoming)
+const Team = lazyPage(LOADERS.Team)
+const Learn = lazyPage(LOADERS.Learn)
+const Faq = lazyPage(LOADERS.Faq)
+const Connect = lazyPage(LOADERS.Connect)
+const Join = lazyPage(LOADERS.Join)
+const EventModal = lazy(LOADERS.EventModal)
+const Terminal = lazy(() => import('./components/Terminal'))
 
 export default function App() {
   const [ready, setReady] = useState(false)
@@ -77,6 +121,17 @@ export default function App() {
       clearTimeout(t)
       window.removeEventListener('load', refresh)
     }
+  }, [ready])
+
+  // after the intro, quietly fetch the other pages so links open instantly (skipped on "data saver")
+  useEffect(() => {
+    if (!ready) return
+    if (navigator.connection && navigator.connection.saveData) return
+    const run = () => Object.values(LOADERS).forEach((load) => load().catch(() => {}))
+    const idle = window.requestIdleCallback ? (f) => window.requestIdleCallback(f, { timeout: 4000 }) : (f) => setTimeout(f, 2000)
+    const cancel = window.cancelIdleCallback || clearTimeout
+    const id = idle(run)
+    return () => cancel(id)
   }, [ready])
 
   // Handle page navigation
@@ -143,17 +198,22 @@ export default function App() {
     <div className="grain relative">
       <Loader onDone={() => setReady(true)} />
       <Atmosphere />
-      <FX ready={ready} />
+      <FX ready={ready} path={path} />
       <BackToTop />
       <Nav ready={ready} />
+      <MobileDock />
 
       <main className="relative z-10">
+        <Suspense fallback={<div className="min-h-[75svh]" />}>
         {path === '/' && (
           <div key={path}>
             <Hero ready={ready} />
+            <NextUp />
             <Marquee />
             <Stats />
-            <Explore />
+            <AboutPreview />
+            <JourneyPreview />
+            <LearnPreview />
           </div>
         )}
 
@@ -195,6 +255,18 @@ export default function App() {
           </div>
         )}
 
+        {path === '/connect' && (
+          <div key={path} className="min-h-[75svh] pt-24 md:pt-28">
+            <Connect />
+          </div>
+        )}
+
+        {path === '/faq' && (
+          <div key={path} className="min-h-[75svh] pt-24 md:pt-28">
+            <Faq />
+          </div>
+        )}
+
         {path === '/join' && (
           <div key={path} className="min-h-[75svh] pt-24 md:pt-28">
             <Join />
@@ -223,19 +295,22 @@ export default function App() {
             </button>
           </div>
         )}
+        </Suspense>
       </main>
 
       <Footer onTerminal={() => setTerminalOpen(true)} />
 
-      {activeEvent && (
-        <EventModal
-          key={activeEvent.id}
-          event={activeEvent}
-          onClose={() => setActiveEvent(null)}
-        />
-      )}
+      <Suspense fallback={null}>
+        {activeEvent && (
+          <EventModal
+            key={activeEvent.id}
+            event={activeEvent}
+            onClose={() => setActiveEvent(null)}
+          />
+        )}
 
-      {terminalOpen && <Terminal onClose={() => setTerminalOpen(false)} />}
+        {terminalOpen && <Terminal onClose={() => setTerminalOpen(false)} />}
+      </Suspense>
     </div>
   )
 }
