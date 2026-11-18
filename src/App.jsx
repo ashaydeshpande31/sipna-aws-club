@@ -24,7 +24,7 @@ import Hero from './components/sections/Hero'
 import Marquee from './components/sections/Marquee'
 import Stats from './components/sections/Stats'
 import NextUp from './components/sections/NextUp'
-import { AboutPreview, JourneyPreview, LearnPreview } from './components/sections/HomePreviews'
+import { AboutPreview, JourneyPreview, LearnPreview, ClubPhoto, PastEventsPreview } from './components/sections/HomePreviews'
 
 
 // Every page except Home loads its own small chunk of code when it is first needed, so the first visit
@@ -219,6 +219,8 @@ export default function App() {
             <NextUp />
             <Marquee />
             <Stats />
+            <ClubPhoto />
+            <PastEventsPreview onOpen={setActiveEvent} />
             <AboutPreview />
             <JourneyPreview />
             <LearnPreview />
