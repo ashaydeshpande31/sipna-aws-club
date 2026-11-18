@@ -23,13 +23,93 @@ const ROUND = 8
 const rank = (s) =>
   s >= 8 ? 'Cloud Legend' : s >= 6 ? 'Solutions Architect' : s >= 4 ? 'Cloud Practitioner' : 'Cloud Newbie'
 
-function best(set) {
+// ---- one attempt per phone, leaderboard shared through /api/leaderboard when it is set up ----
+const KEY = 'aws-quiz-attempt'
+const readAttempt = () => {
   try {
-    if (set != null) localStorage.setItem('aws-quiz-best', String(set))
-    return Number(localStorage.getItem('aws-quiz-best') || 0)
+    return JSON.parse(localStorage.getItem(KEY) || 'null')
   } catch {
-    return 0
+    return null
   }
+}
+const writeAttempt = (v) => {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(v))
+  } catch {
+    /* ignore */
+  }
+}
+
+async function api(method, body) {
+  const res = await fetch('/api/leaderboard', {
+    method,
+    headers: body ? { 'Content-Type': 'application/json' } : undefined,
+    body: body ? JSON.stringify(body) : undefined,
+  })
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) throw new Error(data.error || 'Something went wrong.')
+  return data
+}
+
+const MEDAL = ['🥇', '🥈', '🥉']
+
+function Leaderboard({ me, refreshKey }) {
+  const [state, setState] = useState({ loading: true, configured: false, top: [], error: '' })
+  useEffect(() => {
+    let alive = true
+    api('GET')
+      .then((d) => alive && setState({ loading: false, configured: !!d.configured, top: d.top || [], error: '' }))
+      .catch(() => alive && setState({ loading: false, configured: false, top: [], error: 'offline' }))
+    return () => {
+      alive = false
+    }
+  }, [refreshKey])
+
+  // not connected yet (or offline): at least show this phone's own result
+  const rows = state.configured
+    ? state.top
+    : me && me.score != null
+      ? [{ name: me.name, score: me.score }]
+      : []
+
+  return (
+    <div className="mt-8 text-left">
+      <h4 className="flex items-center gap-2 font-display text-lg font-semibold text-white">
+        <Trophy size={18} className="text-smile" /> Leaderboard
+      </h4>
+      {state.loading ? (
+        <p className="mt-3 text-sm text-white/40">Loading…</p>
+      ) : rows.length === 0 ? (
+        <p className="mt-3 text-sm text-white/45">No scores yet. Be the first!</p>
+      ) : (
+        <ol className="mt-3 space-y-1.5">
+          {rows.map((r, k) => {
+            const mine = me && r.name.toLowerCase() === me.name.toLowerCase()
+            return (
+              <li
+                key={r.name + k}
+                className={`flex items-center justify-between gap-3 rounded-xl border px-3.5 py-2.5 text-sm ${
+                  mine ? 'border-aws/60 bg-aws/15 text-white' : 'border-white/8 bg-white/[0.03] text-white/75'
+                }`}
+              >
+                <span className="flex min-w-0 items-center gap-2.5">
+                  <span className="w-6 shrink-0 text-center font-mono text-xs text-white/45">{MEDAL[k] || k + 1}</span>
+                  <span className="truncate">{r.name}</span>
+                </span>
+                <span className="shrink-0 font-semibold text-white">
+                  {r.score}
+                  <span className="text-white/35"> / {ROUND}</span>
+                </span>
+              </li>
+            )
+          })}
+        </ol>
+      )}
+      {!state.loading && !state.configured && (
+        <p className="mt-3 text-xs text-white/35">Showing only your result on this phone. The shared board is not switched on yet.</p>
+      )}
+    </div>
+  )
 }
 
 /* ---------------------------------- QUIZ ---------------------------------- */
@@ -41,15 +121,32 @@ function Quiz() {
         const opts = shuffle(q.o.map((t, i) => ({ t, ok: i === q.a })))
         return { ...q, opts }
       })
-  const [qs, setQs] = useState(make)
+  const [attempt, setAttempt] = useState(readAttempt) // {name, score?}  -> already played
+  const [name, setName] = useState('')
+  const [playing, setPlaying] = useState(false)
+  const [qs, setQs] = useState([])
   const [i, setI] = useState(0)
   const [pick, setPick] = useState(-1)
   const [score, setScore] = useState(0)
   const [streak, setStreak] = useState(0)
-  const [top, setTop] = useState(0)
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState('')
   const [copied, setCopied] = useState(false)
-  const done = i >= ROUND
+  const [tick, setTick] = useState(0)
   const q = qs[Math.min(i, ROUND - 1)]
+
+  const start = () => {
+    const n = name.replace(/\s+/g, ' ').trim()
+    if (n.length < 2) return setErr('Please type your name (at least 2 letters).')
+    // the attempt is used up the moment the quiz starts, so refreshing the page does not give another try
+    const a = { name: n, score: null }
+    writeAttempt(a)
+    setAttempt(a)
+    setQs(make())
+    setPlaying(true)
+    setErr('')
+    haptic(12)
+  }
 
   const choose = (k) => {
     if (pick !== -1) return
@@ -63,26 +160,33 @@ function Quiz() {
       setStreak(0)
     }
   }
+
+  const finish = async () => {
+    const final = score
+    const a = { name: attempt.name, score: final }
+    writeAttempt(a)
+    setAttempt(a)
+    setPlaying(false)
+    if (final >= 6) setTimeout(() => confetti(window.innerWidth / 2, window.innerHeight * 0.35, { count: 140, haptic: true }), 150)
+    setBusy(true)
+    try {
+      await api('POST', { name: a.name, score: final })
+    } catch (e) {
+      // "name already used" or the board is not connected: the result still shows on this phone
+      if (e.message && /already played/i.test(e.message)) setErr(e.message)
+    }
+    setBusy(false)
+    setTick((t) => t + 1)
+  }
+
   const next = () => {
-    const last = i + 1 >= ROUND
+    if (i + 1 >= ROUND) return finish()
     setPick(-1)
     setI(i + 1)
-    if (last) {
-      const b = Math.max(best(), score)
-      best(b)
-      setTop(b)
-      if (score >= 6) setTimeout(() => confetti(window.innerWidth / 2, window.innerHeight * 0.35, { count: 140, haptic: true }), 150)
-    }
   }
-  const again = () => {
-    setQs(make())
-    setI(0)
-    setPick(-1)
-    setScore(0)
-    setStreak(0)
-  }
+
   const share = async () => {
-    const text = `I scored ${score}/${ROUND} (${rank(score)}) on the Sipna AWS Club cloud quiz. Can you beat me? ${window.location.origin}/play`
+    const text = `I scored ${attempt.score}/${ROUND} (${rank(attempt.score)}) on the Sipna AWS Club cloud quiz. Can you beat me? ${window.location.origin}/play`
     try {
       if (navigator.share) await navigator.share({ text })
       else {
@@ -95,32 +199,74 @@ function Quiz() {
     }
   }
 
-  if (done) {
+  // 1) already played (score saved) or quiz abandoned halfway
+  if (attempt && !playing) {
+    const finished = attempt.score != null
     return (
-      <div className="glass mx-auto max-w-xl rounded-3xl p-8 text-center">
-        <Trophy className="mx-auto text-smile" size={40} />
-        <p className="mt-4 font-mono text-xs uppercase tracking-[0.2em] text-aws-soft">Your rank</p>
-        <h3 className="font-display text-3xl font-bold text-white">{rank(score)}</h3>
-        <p className="mt-2 text-5xl font-bold text-white">
-          {score}
-          <span className="text-2xl text-white/40"> / {ROUND}</span>
-        </p>
-        <p className="mt-2 text-sm text-white/50">Your best: {Math.max(top, score)} / {ROUND}</p>
-        <div className="mt-7 flex flex-wrap justify-center gap-3">
-          <button type="button" onClick={again} className={btnPrimary}>
-            <RotateCcw size={16} /> Play again
-          </button>
-          <button type="button" onClick={share} className={btnGhost}>
-            {copied ? <Check size={16} /> : <Share2 size={16} />} {copied ? 'Copied!' : 'Share score'}
-          </button>
-        </div>
-        <button type="button" onClick={() => navigate('/join')} className="mt-6 text-sm font-semibold text-aws-soft hover:text-white">
-          Love the cloud? Join the club →
-        </button>
+      <div className="glass mx-auto max-w-xl rounded-3xl p-6 text-center md:p-8">
+        {finished ? (
+          <>
+            <Trophy className="mx-auto text-smile" size={40} />
+            <p className="mt-4 font-mono text-xs uppercase tracking-[0.2em] text-aws-soft">{attempt.name}, your rank</p>
+            <h3 className="font-display text-3xl font-bold text-white">{rank(attempt.score)}</h3>
+            <p className="mt-2 text-5xl font-bold text-white">
+              {attempt.score}
+              <span className="text-2xl text-white/40"> / {ROUND}</span>
+            </p>
+            <p className="mt-3 text-sm text-white/50">The quiz can be played only once. Thanks for playing!</p>
+            {err && <p className="mt-3 text-sm text-rose-300">{err}</p>}
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <button type="button" onClick={share} className={btnPrimary}>
+                {copied ? <Check size={16} /> : <Share2 size={16} />} {copied ? 'Copied!' : 'Share score'}
+              </button>
+              <button type="button" onClick={() => navigate('/join')} className={btnGhost}>
+                Join the club
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="font-display text-xl font-semibold text-white">Your attempt is already used</p>
+            <p className="mt-2 text-sm text-white/55">The quiz can be played only once on a device. Check the leaderboard below.</p>
+          </>
+        )}
+        <Leaderboard me={attempt} refreshKey={tick + (busy ? 0.5 : 0)} />
       </div>
     )
   }
 
+  // 2) ask the name first
+  if (!playing) {
+    return (
+      <div className="glass mx-auto max-w-xl rounded-3xl p-6 md:p-8">
+        <h3 className="font-display text-2xl font-semibold text-white">Ready for the quiz?</h3>
+        <p className="mt-2 text-sm leading-relaxed text-white/60">
+          {ROUND} questions about AWS. Your score goes on the leaderboard with your name. You can play <b className="text-white">only once</b>, so
+          take your time.
+        </p>
+        <label htmlFor="quiz-name" className="mt-6 block text-xs font-semibold uppercase tracking-[0.16em] text-white/50">
+          Your name
+        </label>
+        <input
+          id="quiz-name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && start()}
+          maxLength={20}
+          autoComplete="off"
+          placeholder="e.g. Ashay"
+          className="mt-2 w-full rounded-2xl border border-white/15 bg-white/[0.05] px-4 py-3.5 text-base text-white outline-none placeholder:text-white/30 focus:border-aws"
+        />
+        {err && <p className="mt-2 text-sm text-rose-300">{err}</p>}
+        <button type="button" onClick={start} className={`${btnPrimary} mt-5 w-full justify-center`}>
+          Start the quiz <ArrowRight size={16} />
+        </button>
+        <Leaderboard me={null} refreshKey={0} />
+      </div>
+    )
+  }
+
+  // 3) the questions
   return (
     <div className="glass mx-auto max-w-xl rounded-3xl p-5 md:p-8">
       <div className="flex items-center justify-between text-xs text-white/50">
