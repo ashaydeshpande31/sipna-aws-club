@@ -1,5 +1,5 @@
 import { Heart, MapPin, Mail, BadgeCheck, Terminal as TerminalIcon } from 'lucide-react'
-import LogoMark from './ui/LogoMark'
+import { LogoLockup } from './ui/LogoMark'
 import Socials from './ui/Socials'
 import ShareButton from './ui/ShareButton'
 import ThemePicker from './ui/ThemePicker'
@@ -41,12 +41,8 @@ export default function Footer({ onTerminal }) {
         <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr]">
 
           <div>
-            <div className="flex items-center gap-3">
-              <LogoMark className="h-10 w-10" />
-              <span className="font-display text-xl font-bold text-white">
-                {SITE.name}
-              </span>
-            </div>
+            <LogoLockup />
+            <p className="mt-3 font-display text-lg font-bold text-white">{SITE.name}</p>
 
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/55">
               An AWS Student Builder Group at {SITE.college}.
