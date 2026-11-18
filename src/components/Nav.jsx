@@ -124,11 +124,11 @@ export default function Nav({ ready }) {
 
       <header
         ref={root}
-        className="fixed inset-x-0 top-[calc(1rem+var(--ann,0px))] z-[65] hidden justify-center px-4 sm:flex"
+        className="fixed inset-x-0 top-[calc(1rem+var(--ann,0px))] z-[65] hidden justify-center px-4 md:flex"
       >
         <nav
           aria-label="Main"
-          className={`flex w-full max-w-4xl items-center justify-between gap-1 rounded-full border py-1.5 pl-2.5 pr-1.5 transition-all duration-500 sm:gap-3 sm:py-2 sm:pl-4 sm:pr-2 ${
+          className={`flex w-full max-w-5xl items-center justify-between gap-1 rounded-full border py-1.5 pl-2.5 pr-1.5 transition-all duration-500 sm:gap-3 sm:py-2 sm:pl-4 sm:pr-2 ${
             scrolled
               ? 'border-aws/30 bg-ink/80 shadow-[0_10px_40px_-10px_rgba(140,79,255,0.45)] backdrop-blur-xl'
               : 'border-white/10 bg-ink/40 backdrop-blur-md'

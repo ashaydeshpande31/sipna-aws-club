@@ -60,7 +60,7 @@ export default function MobileDock() {
   }, [open])
 
   return (
-    <div className="sm:hidden">
+    <div className="md:hidden">
       {/* top bar */}
       <div className="fixed inset-x-0 top-[var(--ann,0px)] z-[65] flex items-center justify-between border-b border-white/[0.07] bg-ink/90 px-4 pb-2 pt-[max(0.5rem,env(safe-area-inset-top))]">
         <a href="/" onClick={go('/')} className="flex items-center gap-2" aria-label={`${SITE.name} home`}>
