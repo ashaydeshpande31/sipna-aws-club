@@ -1,10 +1,11 @@
-import { Heart, MapPin, Terminal as TerminalIcon } from 'lucide-react'
+import { Heart, MapPin, Mail, BadgeCheck, Terminal as TerminalIcon } from 'lucide-react'
 import LogoMark from './ui/LogoMark'
 import Socials from './ui/Socials'
 import ShareButton from './ui/ShareButton'
 import { pathForId } from '../lib/routes'
 import { navigate } from '../lib/scroll'
 import { SITE } from '../data/site'
+import { CONTACT } from '../data/contact'
 
 const LINKS = [
   ['About', 'about'],
@@ -13,6 +14,9 @@ const LINKS = [
   ['Upcoming', 'upcoming'],
   ['Team', 'team'],
   ['Learn', 'learn'],
+  ['News', 'news'],
+  ['FAQ', 'faq'],
+  ['Connect', 'connect'],
   ['Join', 'join'],
 ]
 
@@ -48,6 +52,20 @@ export default function Footer({ onTerminal }) {
             <p className="mt-4 flex max-w-sm items-start gap-2 text-sm text-white/45">
               <MapPin size={16} className="mt-0.5 shrink-0 text-aws-soft" />
               {SITE.address}
+            </p>
+
+            {CONTACT.email && (
+              <p className="mt-3 flex max-w-sm items-start gap-2 text-sm text-white/45">
+                <Mail size={16} className="mt-0.5 shrink-0 text-aws-soft" />
+                <a href={`mailto:${CONTACT.email}`} className="hover:text-white">
+                  {CONTACT.email}
+                </a>
+              </p>
+            )}
+
+            <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-aws/30 bg-aws/10 px-3.5 py-1.5 text-xs font-medium text-aws-soft">
+              <BadgeCheck size={14} />
+              Official AWS Student Builder Group · Sipna COET
             </p>
           </div>
 
@@ -129,6 +147,23 @@ export default function Footer({ onTerminal }) {
             </span>
           )}
         </div>
+
+        <nav aria-label="Legal" className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs">
+          {[['privacy', 'Privacy Policy'], ['terms', 'Terms of Use'], ['conduct', 'Code of Conduct']].map(([id, label]) => (
+            <a
+              key={id}
+              href={pathForId(id)}
+              onClick={(e) => {
+                if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return
+                e.preventDefault()
+                navigate(pathForId(id))
+              }}
+              className="text-white/50 transition-colors hover:text-white"
+            >
+              {label}
+            </a>
+          ))}
+        </nav>
 
         <p className="mt-4 text-center text-[11px] text-white/30">
           AWS and related marks are trademarks of Amazon.com, Inc. or its affiliates. This is a student community site.

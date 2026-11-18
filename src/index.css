@@ -48,6 +48,7 @@
     color-scheme: dark;
   }
   body {
+    padding-top: var(--ann, 0px);
     margin: 0;
     background: var(--color-ink);
     color: #ece6ff;

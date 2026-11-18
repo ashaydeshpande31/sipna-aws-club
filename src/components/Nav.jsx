@@ -123,7 +123,7 @@ export default function Nav({ ready }) {
 
       <header
         ref={root}
-        className="fixed inset-x-0 top-4 z-[65] hidden justify-center px-4 sm:flex"
+        className="fixed inset-x-0 top-[calc(1rem+var(--ann,0px))] z-[65] hidden justify-center px-4 sm:flex"
       >
         <nav
           aria-label="Main"

@@ -8,6 +8,12 @@ export const PAGES = [
   { path: '/upcoming', ids: ['upcoming'], label: 'Upcoming' },
   { path: '/team', ids: ['team'], label: 'Team' },
   { path: '/learn', ids: ['learn'], label: 'Learn' },
+  { path: '/connect', ids: ['connect'], label: 'Connect' },
+  { path: '/faq', ids: ['faq'], label: 'FAQ' },
+  { path: '/news', ids: ['news'], label: 'News' },
+  { path: '/privacy', ids: ['privacy'], label: 'Privacy Policy' },
+  { path: '/terms', ids: ['terms'], label: 'Terms of Use' },
+  { path: '/conduct', ids: ['conduct'], label: 'Code of Conduct' },
   { path: '/join', ids: ['join'], label: 'Join' },
 ]
 

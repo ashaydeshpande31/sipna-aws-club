@@ -6,26 +6,67 @@ const COLORS = ['#8c4fff', '#b58cff', '#ff9900', '#ffb84d', '#ffffff']
 const calm = () =>
   typeof window === 'undefined' || window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
+// One shared canvas for all confetti bursts (instead of a new full-screen canvas per burst).
+let cv = null
+let cx = null
+let pieces = []
+let running = false
+
+function ensureCanvas() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2)
+  if (!cv) {
+    cv = document.createElement('canvas')
+    cv.setAttribute('aria-hidden', 'true')
+    cv.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:90'
+    cx = cv.getContext('2d')
+  }
+  if (cv.width !== Math.round(window.innerWidth * dpr) || cv.height !== Math.round(window.innerHeight * dpr)) {
+    cv.width = Math.round(window.innerWidth * dpr)
+    cv.height = Math.round(window.innerHeight * dpr)
+  }
+  cx.setTransform(dpr, 0, 0, dpr, 0, 0)
+  if (!cv.parentNode) document.body.appendChild(cv)
+}
+
+function tick() {
+  cx.clearRect(0, 0, window.innerWidth, window.innerHeight)
+  const next = []
+  for (const p of pieces) {
+    p.vy += 0.28
+    p.vx *= 0.985
+    p.vy *= 0.985
+    p.x += p.vx
+    p.y += p.vy
+    p.r += p.vr
+    p.life -= 0.011
+    if (p.life <= 0 || p.y > window.innerHeight + 30) continue
+    next.push(p)
+    cx.save()
+    cx.globalAlpha = Math.min(1, p.life * 1.6)
+    cx.translate(p.x, p.y)
+    cx.rotate(p.r)
+    cx.fillStyle = p.c
+    cx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h)
+    cx.restore()
+  }
+  pieces = next
+  if (pieces.length) requestAnimationFrame(tick)
+  else {
+    running = false
+    cv.remove()
+  }
+}
+
 /** Burst of confetti from a point on the screen (x, y in viewport pixels). */
 export function confetti(x, y, { count = 90, spread = 1, haptic = false } = {}) {
   if (calm()) return
   // short buzz on phones that support it (Android; iPhones ignore this)
   if (haptic && navigator.vibrate) navigator.vibrate(25)
-  const canvas = document.createElement('canvas')
-  canvas.setAttribute('aria-hidden', 'true')
-  canvas.style.cssText =
-    'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:90'
-  const dpr = Math.min(window.devicePixelRatio || 1, 2)
-  canvas.width = window.innerWidth * dpr
-  canvas.height = window.innerHeight * dpr
-  const ctx = canvas.getContext('2d')
-  ctx.scale(dpr, dpr)
-  document.body.appendChild(canvas)
-
-  const pieces = Array.from({ length: count }, () => {
+  ensureCanvas()
+  for (let i = 0; i < count; i++) {
     const a = Math.random() * Math.PI * 2
     const v = (4 + Math.random() * 9) * spread
-    return {
+    pieces.push({
       x,
       y,
       vx: Math.cos(a) * v,
@@ -36,36 +77,12 @@ export function confetti(x, y, { count = 90, spread = 1, haptic = false } = {}) 
       vr: (Math.random() - 0.5) * 0.4,
       c: COLORS[Math.floor(Math.random() * COLORS.length)],
       life: 1,
-    }
-  })
-
-  let frames = 0
-  const tick = () => {
-    frames++
-    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
-    let alive = 0
-    for (const p of pieces) {
-      p.vy += 0.28
-      p.vx *= 0.985
-      p.vy *= 0.985
-      p.x += p.vx
-      p.y += p.vy
-      p.r += p.vr
-      p.life -= 0.011
-      if (p.life <= 0 || p.y > window.innerHeight + 30) continue
-      alive++
-      ctx.save()
-      ctx.globalAlpha = Math.min(1, p.life * 1.6)
-      ctx.translate(p.x, p.y)
-      ctx.rotate(p.r)
-      ctx.fillStyle = p.c
-      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h)
-      ctx.restore()
-    }
-    if (alive && frames < 240) requestAnimationFrame(tick)
-    else canvas.remove()
+    })
   }
-  requestAnimationFrame(tick)
+  if (!running) {
+    running = true
+    requestAnimationFrame(tick)
+  }
 }
 
 function toast(message) {

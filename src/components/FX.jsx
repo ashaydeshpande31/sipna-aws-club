@@ -26,7 +26,7 @@ function glowSprite(color) {
 
 const KONAMI = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a']
 
-export default function FX({ ready }) {
+export default function FX({ ready, path }) {
   const trail = useRef(null)
 
   // 1. glow trail (mouse on desktop, finger on phones)
@@ -142,14 +142,16 @@ export default function FX({ ready }) {
     }
   }, [])
 
-  // 2. heading warp (after the intro finishes)
+  // 2. heading warp (after the intro finishes). Runs again on every page change; a second pass
+  //    catches pages whose code was still loading the first time.
   useEffect(() => {
     if (!ready || reducedMotion()) return
-    let cleanup = () => {}
-    const timer = setTimeout(() => {
-      const ctx = gsap.context(() => {
-        document.querySelectorAll('main h2').forEach((h) => {
+    const ctx = gsap.context(() => {})
+    const apply = () => {
+      ctx.add(() => {
+        document.querySelectorAll('main h2:not([data-warp])').forEach((h) => {
           if (h.closest('#events')) return // that section is pinned, leave its heading alone
+          h.setAttribute('data-warp', '1')
           gsap.fromTo(
             h,
             { y: 46, scale: 0.9, skewY: 2.5, transformOrigin: '50% 100%' },
@@ -163,13 +165,16 @@ export default function FX({ ready }) {
           )
         })
       })
-      cleanup = () => ctx.revert()
-    }, 600)
-    return () => {
-      clearTimeout(timer)
-      cleanup()
     }
-  }, [ready])
+    const t1 = setTimeout(apply, 600)
+    const t2 = setTimeout(apply, 1800)
+    return () => {
+      clearTimeout(t1)
+      clearTimeout(t2)
+      ctx.revert()
+      document.querySelectorAll('[data-warp]').forEach((h) => h.removeAttribute('data-warp'))
+    }
+  }, [ready, path])
 
   // 3 + 4. confetti on click, party mode on key combos
   useEffect(() => {

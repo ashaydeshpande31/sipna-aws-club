@@ -15,6 +15,7 @@ import Loader from './components/Loader'
 import Atmosphere from './components/Atmosphere'
 import Nav from './components/Nav'
 import MobileDock from './components/MobileDock'
+import AnnouncementBar from './components/AnnouncementBar'
 import Footer from './components/Footer'
 import FX from './components/FX'
 import BackToTop from './components/BackToTop'
@@ -47,6 +48,8 @@ const LOADERS = {
   Learn: () => import('./components/sections/Learn'),
   Faq: () => import('./components/sections/Faq'),
   Connect: () => import('./components/sections/Connect'),
+  News: () => import('./components/sections/News'),
+  Legal: () => import('./components/sections/Legal'),
   Join: () => import('./components/sections/Join'),
   EventModal: () => import('./components/EventModal'),
 }
@@ -74,6 +77,8 @@ const Team = lazyPage(LOADERS.Team)
 const Learn = lazyPage(LOADERS.Learn)
 const Faq = lazyPage(LOADERS.Faq)
 const Connect = lazyPage(LOADERS.Connect)
+const News = lazyPage(LOADERS.News)
+const Legal = lazyPage(LOADERS.Legal)
 const Join = lazyPage(LOADERS.Join)
 const EventModal = lazy(LOADERS.EventModal)
 const Terminal = lazy(() => import('./components/Terminal'))
@@ -202,6 +207,7 @@ export default function App() {
       <BackToTop />
       <Nav ready={ready} />
       <MobileDock />
+      <AnnouncementBar ready={ready} />
 
       <main className="relative z-10">
         <Suspense fallback={<div className="min-h-[75svh]" />}>
@@ -264,6 +270,18 @@ export default function App() {
         {path === '/faq' && (
           <div key={path} className="min-h-[75svh] pt-24 md:pt-28">
             <Faq />
+          </div>
+        )}
+
+        {path === '/news' && (
+          <div key={path} className="min-h-[75svh] pt-24 md:pt-28">
+            <News />
+          </div>
+        )}
+
+        {['/privacy', '/terms', '/conduct'].includes(path) && (
+          <div key={path} className="min-h-[75svh] pt-24 md:pt-28">
+            <Legal doc={path.slice(1)} />
           </div>
         )}
 
