@@ -16,6 +16,7 @@ import Atmosphere from './components/Atmosphere'
 import Nav from './components/Nav'
 import MobileDock from './components/MobileDock'
 import AnnouncementBar from './components/AnnouncementBar'
+import PageEnd, { END_PAGES } from './components/PageEnd'
 import Footer from './components/Footer'
 import FX from './components/FX'
 import BackToTop from './components/BackToTop'
@@ -300,6 +301,8 @@ export default function App() {
             <Join />
           </div>
         )}
+
+        {END_PAGES.includes(path) && <PageEnd path={path} />}
 
         {!pageFor(path) && (
           <div

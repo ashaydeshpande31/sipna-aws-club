@@ -10,7 +10,7 @@ export default function Join() {
   const { joinForm, whatsapp } = SITE.links
 
   return (
-    <section id="join" className="relative mx-auto max-w-6xl px-5 pb-24 md:px-8 md:pb-32">
+    <section id="join" className="relative mx-auto max-w-6xl px-5 pb-10 md:px-8 md:pb-14">
       <Reveal y={60}>
         <div className="aura relative rounded-[2rem] p-[1.5px]">
           <div className="relative overflow-hidden rounded-[calc(2rem-1.5px)] bg-ink-2 px-6 py-16 text-center md:px-12 md:py-24">

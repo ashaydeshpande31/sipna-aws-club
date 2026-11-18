@@ -202,7 +202,7 @@ export default function Team() {
   const count = (d) => [...CORE_TEAM, ...MEMBERS].filter((p) => getDomain(p) === d).length
 
   return (
-    <section id="team" className="relative mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
+    <section id="team" className="relative mx-auto max-w-7xl px-5 pb-12 pt-20 md:px-8 md:pb-16 md:pt-24">
       <SectionHead
         eyebrow="The students behind the cloud"
         title="Meet Our Team"

@@ -7,7 +7,7 @@ const ICONS = [GraduationCap, FlaskConical, Users, TrendingUp]
 
 export default function Benefits() {
   return (
-    <section id="benefits" className="relative mx-auto max-w-7xl px-5 pb-24 md:px-8 md:pb-32">
+    <section id="benefits" className="relative mx-auto max-w-7xl px-5 pb-10 md:px-8 md:pb-14">
       <SectionHead eyebrow="Why join" title="What You Get Out of the Club" center />
 
       <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">

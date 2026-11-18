@@ -315,7 +315,7 @@ function Builder() {
 export default function Play() {
   const [tab, setTab] = useState('quiz')
   return (
-    <section id="play" className="relative mx-auto max-w-3xl px-5 pb-24 md:px-8 md:pb-32">
+    <section id="play" className="relative mx-auto max-w-3xl px-5 pb-10 md:px-8 md:pb-14">
       <SectionHead
         eyebrow="Play"
         title="Test Your Cloud Skills"

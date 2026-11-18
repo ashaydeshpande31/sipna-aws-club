@@ -16,7 +16,7 @@ export default function Legal({ doc }) {
   const d = LEGAL[doc]
   if (!d) return null
   return (
-    <section className="relative mx-auto max-w-3xl px-5 pb-24 md:px-8 md:pb-32">
+    <section className="relative mx-auto max-w-3xl px-5 pb-10 md:px-8 md:pb-14">
       <SectionHead eyebrow="Official" title={d.title} sub={d.intro} />
       <p className="mt-5 font-mono text-xs uppercase tracking-[0.18em] text-white/40">
         Last updated {fmt(d.updated)}

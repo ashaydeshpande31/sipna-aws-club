@@ -88,7 +88,7 @@ export default function Journey({ onOpen }) {
   }, [])
 
   return (
-    <section id="journey" className="relative mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
+    <section id="journey" className="relative mx-auto max-w-7xl px-5 pb-12 pt-20 md:px-8 md:pb-16 md:pt-24">
       <SectionHead
         eyebrow="Our journey"
         title="From Day One to What's Next"

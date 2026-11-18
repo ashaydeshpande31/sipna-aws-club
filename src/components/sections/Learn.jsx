@@ -5,7 +5,7 @@ import { LEARNING_PATH } from '../../data/site'
 
 export default function Learn() {
   return (
-    <section id="learn" className="relative mx-auto max-w-7xl px-5 pb-24 md:px-8 md:pb-32">
+    <section id="learn" className="relative mx-auto max-w-7xl px-5 pb-10 md:px-8 md:pb-14">
       <SectionHead
         eyebrow="Learn with us"
         title="Your Cloud Learning Path"

@@ -67,7 +67,7 @@ export default function Upcoming() {
   const showEvent = state === 'countdown' || state === 'live'
 
   return (
-    <section id="upcoming" className="relative mx-auto max-w-6xl px-5 py-24 md:px-8 md:py-32">
+    <section id="upcoming" className="relative mx-auto max-w-6xl px-5 pb-12 pt-20 md:px-8 md:pb-16 md:pt-24">
       <SectionHead
         eyebrow="Upcoming event"
         title={showEvent ? 'Mark Your Calendar' : 'The Next Chapter Is Loading'}

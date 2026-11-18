@@ -291,7 +291,7 @@ export default function Winners() {
   }
 
   return (
-    <section id="winners" className="relative mx-auto max-w-6xl px-5 py-24 md:px-8 md:py-32">
+    <section id="winners" className="relative mx-auto max-w-6xl px-5 pb-12 pt-20 md:px-8 md:pb-16 md:pt-24">
       <SectionHead
         eyebrow="Hall of fame"
         title="Meet Our Champions"

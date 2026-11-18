@@ -17,7 +17,7 @@ const open = (to) => (e) => {
 export default function News() {
   const items = [...NEWS].sort((a, b) => (a.date < b.date ? 1 : -1))
   return (
-    <section id="news" className="relative mx-auto max-w-3xl px-5 pb-24 md:px-8 md:pb-32">
+    <section id="news" className="relative mx-auto max-w-3xl px-5 pb-10 md:px-8 md:pb-14">
       <SectionHead
         eyebrow="Official notices"
         title="News & Announcements"
