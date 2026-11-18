@@ -11,7 +11,6 @@ import { CONTACT } from '../data/contact'
 
 const LINKS = [
   ['About', 'about'],
-  ['Journey', 'journey'],
   ['Events', 'events'],
   ['Upcoming', 'upcoming'],
   ['Team', 'team'],

@@ -6,7 +6,6 @@ import {
   Users,
   LayoutGrid,
   Info,
-  Compass,
   GraduationCap,
   Mail,
   CircleHelp,
@@ -31,7 +30,6 @@ const TABS = [
 ]
 const MORE = [
   { to: '/about', label: 'About', Icon: Info },
-  { to: '/journey', label: 'Journey', Icon: Compass },
   { to: '/play', label: 'Play', Icon: Gamepad2 },
   { to: '/learn', label: 'Learn', Icon: GraduationCap },
   { to: '/connect', label: 'Connect', Icon: Mail },

@@ -25,7 +25,7 @@ import Hero from './components/sections/Hero'
 import Marquee from './components/sections/Marquee'
 import Stats from './components/sections/Stats'
 import NextUp from './components/sections/NextUp'
-import { AboutPreview, JourneyPreview, LearnPreview, ClubPhoto, PastEventsPreview } from './components/sections/HomePreviews'
+import { AboutPreview, LearnPreview, ClubPhoto } from './components/sections/HomePreviews'
 
 
 // Every page except Home loads its own small chunk of code when it is first needed, so the first visit
@@ -142,6 +142,14 @@ export default function App() {
     return () => cancel(id)
   }, [ready])
 
+  // the Journey now lives on the Home page: old /journey links go there
+  useEffect(() => {
+    if (path === '/journey') {
+      window.history.replaceState({}, '', '/')
+      window.dispatchEvent(new Event('aws:route'))
+    }
+  }, [path])
+
   // Handle page navigation
   useEffect(() => {
     if (!baseTitle.current) {
@@ -221,9 +229,8 @@ export default function App() {
             <Marquee />
             <Stats />
             <ClubPhoto />
-            <PastEventsPreview onOpen={setActiveEvent} />
             <AboutPreview />
-            <JourneyPreview />
+            <Journey onOpen={setActiveEvent} embedded />
             <LearnPreview />
           </div>
         )}
@@ -232,12 +239,6 @@ export default function App() {
           <div key={path} className="min-h-[75svh]">
             <About />
             <Benefits />
-          </div>
-        )}
-
-        {path === '/journey' && (
-          <div key={path} className="min-h-[75svh]">
-            <Journey onOpen={setActiveEvent} />
           </div>
         )}
 

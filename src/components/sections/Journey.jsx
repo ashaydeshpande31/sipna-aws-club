@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react'
 import { ArrowRight, Image as ImageIcon, Play } from 'lucide-react'
 import SectionHead from '../ui/SectionHead'
-import { gsap, reducedMotion, scrollToId } from '../../lib/scroll'
+import { gsap, reducedMotion, scrollToId, navigate } from '../../lib/scroll'
 import { SITE } from '../../data/site'
 import { PAST_EVENTS, UPCOMING_EVENT } from '../../data/events'
 import { youtubeId } from '../../lib/eventMedia'
-import { chip, pad2 } from '../../lib/ui'
+import { chip, pad2, btnPrimary } from '../../lib/ui'
 
 function buildNodes() {
   const founded = new Date(SITE.founded)
@@ -42,7 +42,7 @@ function buildNodes() {
 
 const NODES = buildNodes()
 
-export default function Journey({ onOpen }) {
+export default function Journey({onOpen, embedded = false }) {
   const list = useRef(null)
   const line = useRef(null)
 
@@ -88,7 +88,7 @@ export default function Journey({ onOpen }) {
   }, [])
 
   return (
-    <section id="journey" className="relative mx-auto max-w-7xl px-5 pb-12 pt-20 md:px-8 md:pb-16 md:pt-24">
+    <section id="journey" className={`relative mx-auto max-w-7xl px-5 md:px-8 ${embedded ? 'py-16 md:py-24' : 'pb-12 pt-20 md:pb-16 md:pt-24'}`}>
       <SectionHead
         eyebrow="Our journey"
         title="From Day One to What's Next"
@@ -163,6 +163,15 @@ export default function Journey({ onOpen }) {
           )
         })}
       </div>
+
+      {embedded && (
+        <div className="mt-14 flex justify-center">
+          <button type="button" onClick={() => navigate('/events')} className={btnPrimary}>
+            See past events
+            <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
+          </button>
+        </div>
+      )}
     </section>
   )
 }

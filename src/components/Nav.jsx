@@ -9,7 +9,6 @@ import { SITE } from '../data/site'
 // Same links on mobile and desktop
 const LINKS = [
   ['About', 'about'],
-  ['Journey', 'journey'],
   ['Events', 'events'],
   ['Upcoming', 'upcoming'],
   ['Team', 'team'],

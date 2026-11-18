@@ -4,7 +4,6 @@ import { navigate } from '../lib/scroll'
 // The pages in reading order. Each page ends with a card for the next one, so visitors always know where to go.
 const ORDER = [
   ['/about', 'About', 'Our mission, vision and what you get from the club.'],
-  ['/journey', 'Journey', 'How the club grew, one event at a time.'],
   ['/events', 'Events', 'Photos and videos from our past events.'],
   ['/upcoming', 'Upcoming', 'What is coming next and how to be part of it.'],
   ['/team', 'Team', 'Meet the students who run the club.'],
