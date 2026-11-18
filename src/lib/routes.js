@@ -10,6 +10,7 @@ export const PAGES = [
   { path: '/learn', ids: ['learn'], label: 'Learn' },
   { path: '/connect', ids: ['connect'], label: 'Connect' },
   { path: '/faq', ids: ['faq'], label: 'FAQ' },
+  { path: '/play', ids: ['play'], label: 'Play' },
   { path: '/news', ids: ['news'], label: 'News' },
   { path: '/privacy', ids: ['privacy'], label: 'Privacy Policy' },
   { path: '/terms', ids: ['terms'], label: 'Terms of Use' },

@@ -10,10 +10,14 @@ import {
   GraduationCap,
   Mail,
   CircleHelp,
+  Gamepad2,
   ArrowRight,
   X,
 } from 'lucide-react'
 import { navigate } from '../lib/scroll'
+import { haptic } from '../lib/haptic'
+import ThemePicker from './ui/ThemePicker'
+import InstallButton from './ui/InstallButton'
 import { useRoute } from '../lib/useRoute'
 import LogoMark from './ui/LogoMark'
 import { SITE } from '../data/site'
@@ -28,6 +32,7 @@ const TABS = [
 const MORE = [
   { to: '/about', label: 'About', Icon: Info },
   { to: '/journey', label: 'Journey', Icon: Compass },
+  { to: '/play', label: 'Play', Icon: Gamepad2 },
   { to: '/learn', label: 'Learn', Icon: GraduationCap },
   { to: '/connect', label: 'Connect', Icon: Mail },
   { to: '/faq', label: 'FAQ', Icon: CircleHelp },
@@ -36,6 +41,7 @@ const MORE = [
 const go = (url) => (e) => {
   if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return
   e.preventDefault()
+  haptic(8)
   navigate(url)
 }
 
@@ -109,6 +115,10 @@ export default function MobileDock() {
                 <ArrowRight size={20} />
                 Join Club
               </a>
+            </div>
+            <div className="mt-4 flex items-center justify-between gap-3 border-t border-white/10 pt-3.5 px-1">
+              <ThemePicker />
+              <InstallButton />
             </div>
           </div>
         </>

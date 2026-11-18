@@ -14,6 +14,7 @@ const LINKS = [
   ['Upcoming', 'upcoming'],
   ['Team', 'team'],
   ['Learn', 'learn'],
+  ['Play', 'play'],
   ['Connect', 'connect'],
 ]
 

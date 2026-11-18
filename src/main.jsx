@@ -6,6 +6,7 @@ import '@fontsource-variable/inter'
 import '@fontsource/jetbrains-mono/400.css'
 import '@fontsource/jetbrains-mono/500.css'
 import './index.css'
+import './lib/theme' // applies the visitor's saved accent colour before the page shows
 
 import App from './App.jsx'
 

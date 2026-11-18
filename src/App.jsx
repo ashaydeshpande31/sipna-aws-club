@@ -49,6 +49,7 @@ const LOADERS = {
   Faq: () => import('./components/sections/Faq'),
   Connect: () => import('./components/sections/Connect'),
   News: () => import('./components/sections/News'),
+  Play: () => import('./components/sections/Play'),
   Legal: () => import('./components/sections/Legal'),
   Join: () => import('./components/sections/Join'),
   EventModal: () => import('./components/EventModal'),
@@ -78,6 +79,7 @@ const Learn = lazyPage(LOADERS.Learn)
 const Faq = lazyPage(LOADERS.Faq)
 const Connect = lazyPage(LOADERS.Connect)
 const News = lazyPage(LOADERS.News)
+const Play = lazyPage(LOADERS.Play)
 const Legal = lazyPage(LOADERS.Legal)
 const Join = lazyPage(LOADERS.Join)
 const EventModal = lazy(LOADERS.EventModal)
@@ -270,6 +272,12 @@ export default function App() {
         {path === '/faq' && (
           <div key={path} className="min-h-[75svh] pt-24 md:pt-28">
             <Faq />
+          </div>
+        )}
+
+        {path === '/play' && (
+          <div key={path} className="min-h-[75svh] pt-24 md:pt-28">
+            <Play />
           </div>
         )}
 

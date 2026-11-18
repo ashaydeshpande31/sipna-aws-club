@@ -2,6 +2,8 @@ import { Heart, MapPin, Mail, BadgeCheck, Terminal as TerminalIcon } from 'lucid
 import LogoMark from './ui/LogoMark'
 import Socials from './ui/Socials'
 import ShareButton from './ui/ShareButton'
+import ThemePicker from './ui/ThemePicker'
+import InstallButton from './ui/InstallButton'
 import { pathForId } from '../lib/routes'
 import { navigate } from '../lib/scroll'
 import { SITE } from '../data/site'
@@ -14,6 +16,7 @@ const LINKS = [
   ['Upcoming', 'upcoming'],
   ['Team', 'team'],
   ['Learn', 'learn'],
+  ['Play', 'play'],
   ['News', 'news'],
   ['FAQ', 'faq'],
   ['Connect', 'connect'],
@@ -117,6 +120,12 @@ export default function Footer({ onTerminal }) {
               label="Share this site"
               className="mt-4"
             />
+
+            <div className="mt-6">
+              <p className="mb-2.5 font-mono text-[11px] uppercase tracking-[0.2em] text-white/40">Accent colour</p>
+              <ThemePicker />
+              <InstallButton className="mt-4" />
+            </div>
 
             <button
               type="button"

@@ -1,6 +1,6 @@
-import { lazy, Suspense, useEffect, useRef } from 'react'
-import { ArrowRight, MousePointer2, CalendarClock } from 'lucide-react'
-import { gsap, scrollToId, reducedMotion } from '../../lib/scroll'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { ArrowRight, MousePointer2, CalendarClock, Gamepad2 } from 'lucide-react'
+import { gsap, scrollToId, reducedMotion, navigate } from '../../lib/scroll'
 import { SplitText, Magnetic } from '../ui/motion'
 import { HERO } from '../../data/site'
 import { UPCOMING_EVENT } from '../../data/events'
@@ -8,6 +8,21 @@ import { btnPrimary, btnGhost } from '../../lib/ui'
 import FloatingServices from '../ui/FloatingServices'
 
 const CloudScene = lazy(() => import('../three/CloudScene'))
+
+// One word at a time swaps in (CSS fade only, one tiny timer).
+function RotatingWord({ words }) {
+  const [i, setI] = useState(0)
+  useEffect(() => {
+    if (reducedMotion()) return
+    const t = setInterval(() => setI((x) => (x + 1) % words.length), 2200)
+    return () => clearInterval(t)
+  }, [words.length])
+  return (
+    <span key={i} className="inline-block animate-[wordin_.5s_ease-out] font-semibold text-white">
+      {words[i]}
+    </span>
+  )
+}
 
 export default function Hero({ ready }) {
   const root = useRef(null)
@@ -87,7 +102,11 @@ export default function Hero({ ready }) {
             className="font-display text-[clamp(2.5rem,6.4vw,5.6rem)] font-bold leading-[1.02] tracking-tight text-white"
           />
 
-          <p data-in className="mt-6 max-w-xl text-base leading-relaxed text-white/65 md:text-lg">
+          <p data-in className="mt-5 font-mono text-sm text-aws-soft">
+            We <RotatingWord words={['learn', 'build', 'deploy', 'certify', 'ship']} /> on AWS
+          </p>
+
+          <p data-in className="mt-4 max-w-xl text-base leading-relaxed text-white/65 md:text-lg">
             {HERO.subtitle}
           </p>
 
@@ -104,6 +123,18 @@ export default function Hero({ ready }) {
                 See Our Events
               </a>
             </Magnetic>
+
+            <a
+              href="/play"
+              onClick={(e) => {
+                if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return
+                e.preventDefault()
+                navigate('/play')
+              }}
+              className="inline-flex items-center gap-2 rounded-full px-3 py-3.5 text-sm font-semibold text-aws-soft hover:text-white"
+            >
+              <Gamepad2 size={16} /> Play AWS Quiz
+            </a>
           </div>
 
           {nextDate && (
