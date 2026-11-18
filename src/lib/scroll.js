@@ -5,6 +5,10 @@ import { pathForId } from './routes'
 
 gsap.registerPlugin(ScrollTrigger)
 
+// Phones: the address bar sliding in/out changes the window height while you scroll. Without this,
+// every one of those tiny changes makes ScrollTrigger recalculate the whole page (a big source of jank).
+ScrollTrigger.config({ ignoreMobileResize: true })
+
 let lenis = null
 let tick = null
 
@@ -17,7 +21,9 @@ export const finePointer = () =>
   window.matchMedia('(pointer: fine)').matches
 
 export function initSmoothScroll() {
-  if (lenis || reducedMotion()) return
+  // On phones the browser's own scrolling is already smooth and runs off the main thread;
+  // adding a JS smooth-scroller on top only costs battery and frames. Desktop keeps it.
+  if (lenis || reducedMotion() || !finePointer()) return
 
   lenis = new Lenis({
     lerp: 0.09,

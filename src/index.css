@@ -72,6 +72,19 @@
 }
 
 /* Lenis smooth-scroll support */
+html { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+
+/* Soft background glows drawn as gradients: looks like a blur but costs almost nothing to paint. */
+.glow-a { background: radial-gradient(circle, rgb(140 79 255 / 0.22), transparent 68%); }
+.glow-b { background: radial-gradient(circle, rgb(90 40 200 / 0.26), transparent 68%); }
+.glow-c { background: radial-gradient(circle, rgb(255 153 0 / 0.07), transparent 68%); }
+
+@media (pointer: coarse) {
+  /* phones: still backgrounds, no film grain, no endlessly floating glows */
+  .grain::before { display: none; }
+  .animate-float, .animate-float-slow { animation: none !important; }
+}
+
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
@@ -88,8 +101,16 @@ html.lenis, html.lenis body { height: auto; }
   .glass {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.025));
     border: 1px solid rgba(255, 255, 255, 0.09);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  /* phones/tablets: skip the expensive blur, use a slightly stronger tint instead */
+  @media (pointer: coarse) {
+    .glass {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
   }
 
   /* Cursor-follow spotlight. JS sets --mx / --my on the element. */
@@ -145,7 +166,7 @@ html.lenis, html.lenis body { height: auto; }
   .grain::before {
     content: "";
     position: fixed;
-    inset: -50%;
+    inset: 0;
     z-index: 60;
     pointer-events: none;
     opacity: 0.045;

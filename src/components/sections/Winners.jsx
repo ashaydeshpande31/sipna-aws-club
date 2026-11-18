@@ -160,7 +160,7 @@ function Lightbox({ items, index, setIndex, onClose }) {
         onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
         onTouchEnd={onTouchEnd}
       >
-        <img
+        <img loading="lazy" decoding="async"
           key={item.photo}
           src={item.photo}
           alt={item.name ? `${item.name}, ${item.label}` : item.label}

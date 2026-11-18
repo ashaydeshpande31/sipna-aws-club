@@ -230,7 +230,7 @@ export default function EventModal({ event, onClose }) {
                       aria-label="Play video"
                       className="group absolute inset-0 h-full w-full"
                     >
-                      <img
+                      <img loading="lazy" decoding="async"
                         src={`https://i.ytimg.com/vi/${yt}/hqdefault.jpg`}
                         alt=""
                         className="h-full w-full object-cover"
@@ -263,7 +263,7 @@ export default function EventModal({ event, onClose }) {
                   onTouchMove={onTouchMove}
                   onTouchEnd={onTouchEnd}
                 >
-                  <img
+                  <img loading="lazy" decoding="async"
                     ref={imgRef}
                     key={photos[idx]}
                     decoding="async"

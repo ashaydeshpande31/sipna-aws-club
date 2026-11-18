@@ -64,7 +64,7 @@ export default function FloatingDust() {
       canvas.width = Math.round(W * dpr)
       canvas.height = Math.round(H * dpr)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      const total = W < 700 ? 45 : 90
+      const total = W < 700 ? 32 : 90
       dots = []
       DEPTHS.forEach((D, di) => {
         const n = Math.round(total * D.share)
@@ -136,8 +136,18 @@ export default function FloatingDust() {
       document.addEventListener('pointerleave', onLeave)
     }
     raf = requestAnimationFrame(frame)
+    // stop drawing while the tab / app is in the background
+    const onVis = () => {
+      cancelAnimationFrame(raf)
+      if (!document.hidden && !reduce) {
+        last = performance.now()
+        raf = requestAnimationFrame(frame)
+      }
+    }
+    document.addEventListener('visibilitychange', onVis)
     return () => {
       cancelAnimationFrame(raf)
+      document.removeEventListener('visibilitychange', onVis)
       window.removeEventListener('resize', onResize)
       window.removeEventListener('pointermove', onMove)
       document.removeEventListener('pointerleave', onLeave)

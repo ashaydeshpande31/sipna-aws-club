@@ -217,7 +217,7 @@ export default function CloudScene({ ready }) {
       setFailed(true)
       return
     }
-    const dpr = Math.min(window.devicePixelRatio || 1, small ? 1.5 : 1.75)
+    const dpr = Math.min(window.devicePixelRatio || 1, small ? 1.25 : 1.75)
     renderer.outputColorSpace = THREE.LinearSRGBColorSpace // no extra conversion, see note at the top
     renderer.setPixelRatio(dpr)
     renderer.setClearColor(0x000000, 0)
@@ -232,7 +232,7 @@ export default function CloudScene({ ready }) {
     const halfH = Math.tan(THREE.MathUtils.degToRad(25)) * camera.position.z
 
     // --- the particle cloud ---
-    const cloudGeo = buildCloud(small ? 1100 : 2300)
+    const cloudGeo = buildCloud(small ? 800 : 2300)
     const cloudMat = new THREE.ShaderMaterial({
       vertexShader: CLOUD_VERT,
       fragmentShader: SOFT_FRAG,
@@ -254,7 +254,7 @@ export default function CloudScene({ ready }) {
 
     // --- the network of nodes + travelling pulses ---
     const net = new THREE.Group()
-    const { pts, edges, lineGeo, nodeGeo } = buildNetwork(small ? 46 : 84)
+    const { pts, edges, lineGeo, nodeGeo } = buildNetwork(small ? 38 : 84)
     const lineMat = new THREE.LineBasicMaterial({
       color: 0x8c4fff,
       transparent: true,
@@ -278,7 +278,7 @@ export default function CloudScene({ ready }) {
     })
     net.add(new THREE.Points(nodeGeo, nodeMat))
 
-    const pulseCount = small ? 12 : 26
+    const pulseCount = small ? 9 : 26
     const pulses = Array.from({ length: pulseCount }, () => ({
       e: Math.floor(Math.random() * edges.length),
       t: Math.random(),
@@ -398,8 +398,11 @@ export default function CloudScene({ ready }) {
     const b = new THREE.Vector3()
     const cur = new THREE.Vector2()
 
+    let lastT = 0
     function frame() {
       const t = clock.getElapsedTime()
+      const dt = Math.min(0.05, t - lastT)
+      lastT = t
       cloudMat.uniforms.uTime.value = t
       nodeMat.uniforms.uTime.value = t
 
@@ -433,7 +436,7 @@ export default function CloudScene({ ready }) {
       // pulses travelling along edges
       for (let i = 0; i < pulses.length; i++) {
         const p = pulses[i]
-        p.t += (p.s * 0.016) / 0.5
+        p.t += (p.s * dt) / 0.5
         if (p.t >= 1) {
           p.t = 0
           p.e = Math.floor(Math.random() * edges.length)
@@ -502,6 +505,7 @@ export default function CloudScene({ ready }) {
       pulseGeo.dispose()
       pulseMat.dispose()
       renderer.dispose()
+      renderer.forceContextLoss()
       if (canvas.parentNode === el) el.removeChild(canvas)
     }
   }, [])
