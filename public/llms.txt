@@ -1,0 +1,25 @@
+# Sipna AWS Club
+
+> The official website of Sipna AWS Club, an AWS Student Builder Group at Sipna College of Engineering & Technology (Sipna COET), Amravati, Maharashtra, India. Students learn cloud computing and AWS by building, through workshops, competitions and community events.
+
+Sipna AWS Club is an independent student community. It is not operated or endorsed by Amazon Web Services.
+
+## Pages
+
+- [Home](https://sipnaaws-club.vercel.app/): Overview, club photo, journey and learning path
+- [About](https://sipnaaws-club.vercel.app/about): Mission, vision and benefits of joining
+- [Events](https://sipnaaws-club.vercel.app/events): Photos and videos from past events, and event winners
+- [Upcoming](https://sipnaaws-club.vercel.app/upcoming): The next club event
+- [Team](https://sipnaaws-club.vercel.app/team): The students who run the club
+- [Learn](https://sipnaaws-club.vercel.app/learn): A path from AWS basics to certification
+- [Play](https://sipnaaws-club.vercel.app/play): AWS quiz and architecture puzzle
+- [Connect](https://sipnaaws-club.vercel.app/connect): Contact the club
+- [FAQ](https://sipnaaws-club.vercel.app/faq): Common questions about joining
+- [Join](https://sipnaaws-club.vercel.app/join): How to become a member
+
+## Policies
+
+- [Privacy Policy](https://sipnaaws-club.vercel.app/privacy)
+- [Terms of Use](https://sipnaaws-club.vercel.app/terms)
+- [Code of Conduct](https://sipnaaws-club.vercel.app/conduct)
+- [News and announcements](https://sipnaaws-club.vercel.app/news)

@@ -28,6 +28,21 @@ export default function Hero({ ready }) {
   const root = useRef(null)
   const content = useRef(null)
 
+  // The 3D scene (about 120 KB of code) is only downloaded after the intro, when the browser is idle,
+  // and never on "data saver" or very low-end phones. The page already looks complete without it.
+  const [show3d, setShow3d] = useState(false)
+  useEffect(() => {
+    if (!ready) return
+    const weak =
+      (navigator.connection && navigator.connection.saveData) ||
+      (navigator.deviceMemory && navigator.deviceMemory <= 2) ||
+      (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2)
+    if (weak) return
+    const go = () => setShow3d(true)
+    const id = window.requestIdleCallback ? window.requestIdleCallback(go, { timeout: 1500 }) : setTimeout(go, 400)
+    return () => (window.cancelIdleCallback ? window.cancelIdleCallback(id) : clearTimeout(id))
+  }, [ready])
+
   useEffect(() => {
     if (reducedMotion()) return
     const ctx = gsap.context(() => {
@@ -77,9 +92,11 @@ export default function Hero({ ready }) {
 
   return (
     <section id="home" ref={root} className="relative min-h-svh overflow-hidden">
-      <Suspense fallback={null}>
-        <CloudScene ready={ready} />
-      </Suspense>
+      {show3d && (
+        <Suspense fallback={null}>
+          <CloudScene ready={ready} />
+        </Suspense>
+      )}
       <FloatingServices ready={ready} />
 
       <div className="relative z-10 mx-auto flex min-h-svh max-w-7xl flex-col justify-end px-5 pb-24 pt-32 md:justify-center md:px-8 md:pb-20">

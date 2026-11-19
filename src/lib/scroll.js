@@ -1,6 +1,5 @@
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import Lenis from 'lenis'
 import { pathForId } from './routes'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -11,6 +10,7 @@ ScrollTrigger.config({ ignoreMobileResize: true })
 
 let lenis = null
 let tick = null
+let starting = false
 
 export const reducedMotion = () =>
   typeof window !== 'undefined' &&
@@ -23,22 +23,29 @@ export const finePointer = () =>
 export function initSmoothScroll() {
   // On phones the browser's own scrolling is already smooth and runs off the main thread;
   // adding a JS smooth-scroller on top only costs battery and frames. Desktop keeps it.
-  if (lenis || reducedMotion() || !finePointer()) return
+  if (lenis || starting || reducedMotion() || !finePointer()) return
+  starting = true
 
-  lenis = new Lenis({
-    lerp: 0.09,
-    smoothWheel: true
+  // the smooth-scroll library is only downloaded on desktop, so phones never pay for it
+  import('lenis').then(({ default: Lenis }) => {
+    if (!starting) return // destroyed while loading
+    starting = false
+    lenis = new Lenis({
+      lerp: 0.09,
+      smoothWheel: true
+    })
+
+    lenis.on('scroll', ScrollTrigger.update)
+
+    tick = (time) => lenis && lenis.raf(time * 1000)
+
+    gsap.ticker.add(tick)
+    gsap.ticker.lagSmoothing(0)
   })
-
-  lenis.on('scroll', ScrollTrigger.update)
-
-  tick = (time) => lenis && lenis.raf(time * 1000)
-
-  gsap.ticker.add(tick)
-  gsap.ticker.lagSmoothing(0)
 }
 
 export function destroySmoothScroll() {
+  starting = false
   if (tick) gsap.ticker.remove(tick)
   if (lenis) lenis.destroy()
 
