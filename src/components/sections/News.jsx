@@ -33,7 +33,7 @@ export default function News() {
                   <span className="rounded-full bg-aws/20 px-3 py-1 font-mono uppercase tracking-[0.14em] text-aws-soft">
                     {n.kind || 'Notice'}
                   </span>
-                  <time dateTime={n.date} className="font-mono text-white/45">
+                  <time dateTime={n.date} className="font-mono text-white/60">
                     {fmt(n.date)}
                   </time>
                 </div>

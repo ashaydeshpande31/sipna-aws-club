@@ -18,7 +18,7 @@ export default function Legal({ doc }) {
   return (
     <section className="relative mx-auto max-w-3xl px-5 pb-10 md:px-8 md:pb-14">
       <SectionHead eyebrow="Official" title={d.title} sub={d.intro} />
-      <p className="mt-5 font-mono text-xs uppercase tracking-[0.18em] text-white/40">
+      <p className="mt-5 font-mono text-xs uppercase tracking-[0.18em] text-white/60">
         Last updated {fmt(d.updated)}
       </p>
 

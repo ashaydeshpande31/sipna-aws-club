@@ -172,7 +172,7 @@ export default function Hero({ ready }) {
       </div>
 
       <div className="pointer-events-none absolute inset-x-0 bottom-6 z-10 hidden justify-center md:flex">
-        <div data-in className="flex flex-col items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-white/40">
+        <div data-in className="flex flex-col items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-white/60">
           <MousePointer2 size={14} className="animate-bounce" />
           Scroll
         </div>

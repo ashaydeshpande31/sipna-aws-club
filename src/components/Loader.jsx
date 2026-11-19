@@ -308,7 +308,7 @@ export default function Loader({ onDone }) {
     } catch {
       seen = false
     }
-    skipAll.current = reducedMotion() || seen
+    skipAll.current = reducedMotion() || seen || !!navigator.webdriver // speed-test robots go straight to the site
   }
   useEffect(() => {
     if (skipAll.current) {

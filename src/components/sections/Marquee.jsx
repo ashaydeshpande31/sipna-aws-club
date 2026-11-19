@@ -9,7 +9,7 @@ function Row({ reverse = false }) {
         {items.map((name, i) => (
           <span
             key={i}
-            className="flex items-center gap-8 whitespace-nowrap pr-8 font-display text-2xl font-semibold text-white/[0.14] md:text-4xl"
+            className="flex items-center gap-8 whitespace-nowrap pr-8 font-display text-2xl font-semibold text-white/60 md:text-4xl"
           >
             {name}
             <span className="text-smile/60">✦</span>

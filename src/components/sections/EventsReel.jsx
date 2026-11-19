@@ -97,7 +97,7 @@ export default function EventsReel({ onOpen }) {
                     <div className="flex flex-1 flex-col p-6">
                       <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-aws-soft">
                         {e.category}
-                        {e.date && <span className="text-white/40">· {e.date}</span>}
+                        {e.date && <span className="text-white/60">· {e.date}</span>}
                       </div>
                       <h3 className="mt-2 font-display text-xl font-bold leading-snug text-white">{e.title}</h3>
                       <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/55">{e.description}</p>
@@ -140,7 +140,7 @@ export default function EventsReel({ onOpen }) {
           </div>
 
           <div className="mx-auto mt-8 hidden w-[min(34rem,70vw)] items-center gap-4 md:flex" aria-hidden="true">
-            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/40">Scroll</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/60">Scroll</span>
             <div className="h-px flex-1 bg-white/10">
               <div ref={progress} className="h-px origin-left scale-x-0 bg-linear-to-r from-aws to-smile" />
             </div>

@@ -49,7 +49,7 @@ function Unit({ value, label }) {
   return (
     <div className="glass rounded-2xl px-3 py-5 text-center md:px-4 md:py-6">
       <div className="font-display text-4xl font-bold tabular-nums text-white md:text-6xl">{value}</div>
-      <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-white/45">{label}</div>
+      <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-white/60">{label}</div>
     </div>
   )
 }

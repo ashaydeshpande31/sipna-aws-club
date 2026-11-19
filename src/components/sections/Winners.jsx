@@ -31,7 +31,7 @@ function Shot({ person, first, onOpen }) {
           >
             {person.name ? getInitials(person.name) : '?'}
           </div>
-          <div className="mt-2 font-mono text-[10px] uppercase tracking-widest text-white/40">Photo coming soon</div>
+          <div className="mt-2 font-mono text-[10px] uppercase tracking-widest text-white/60">Photo coming soon</div>
         </div>
       </div>
     )
@@ -189,7 +189,7 @@ function Lightbox({ items, index, setIndex, onClose }) {
           {item.name && <p className="mt-3 font-display text-xl font-bold text-white md:text-2xl">{item.name}</p>}
           {item.detail && <p className="mt-1 text-sm text-white/60">{item.detail}</p>}
           {items.length > 1 && (
-            <p className="mt-2 font-mono text-xs text-white/40">
+            <p className="mt-2 font-mono text-xs text-white/60">
               {index + 1} / {items.length}
             </p>
           )}
@@ -329,7 +329,7 @@ export default function Winners() {
       <Reveal y={30} className="mt-10 text-center">
         <span className="font-mono text-xs uppercase tracking-[0.25em] text-aws-soft">
           {entry.event}
-          {entry.date && <span className="text-white/40"> · {entry.date}</span>}
+          {entry.date && <span className="text-white/60"> · {entry.date}</span>}
         </span>
       </Reveal>
 

@@ -185,7 +185,7 @@ export default function Terminal({ onClose }) {
           />
           <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
           <span className="h-3 w-3 rounded-full bg-[#28c840]" />
-          <span className="ml-3 font-mono text-xs text-white/40">aws-cloudshell — sipna</span>
+          <span className="ml-3 font-mono text-xs text-white/60">aws-cloudshell — sipna</span>
         </div>
 
         <div

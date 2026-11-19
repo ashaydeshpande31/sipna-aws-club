@@ -247,7 +247,7 @@ export default function EventModal({ event, onClose }) {
                     <div>
                       <Film className="mx-auto text-aws-soft" size={40} />
                       <p className="mt-3 font-display text-lg font-semibold text-white">Event video coming soon</p>
-                      <p className="mt-1 text-sm text-white/45">The highlights reel is being edited.</p>
+                      <p className="mt-1 text-sm text-white/60">The highlights reel is being edited.</p>
                     </div>
                   </div>
                 )}

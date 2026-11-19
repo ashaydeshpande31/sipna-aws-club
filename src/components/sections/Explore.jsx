@@ -35,7 +35,7 @@ export default function Explore() {
                 <span className="grid h-12 w-12 place-items-center rounded-2xl bg-linear-to-br from-aws to-aws-deep text-white shadow-[0_8px_30px_-6px_rgba(140,79,255,0.9)] transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110">
                   <Icon size={22} />
                 </span>
-                <ArrowUpRight size={18} className="text-white/30 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-white" />
+                <ArrowUpRight size={18} className="text-white/60 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-white" />
               </div>
               <h3 className="mt-6 font-display text-lg font-semibold text-white">{label}</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/60">{text}</p>

@@ -163,7 +163,7 @@ function Card({ person, delay = 0 }) {
         <div className="p-5">
           <h4 className="font-display text-base font-semibold text-white">{person.name}</h4>
           <p className="mt-1 text-sm text-aws-soft">{person.position}</p>
-          <p className="mt-1 text-xs text-white/45">{meta(person)}</p>
+          <p className="mt-1 text-xs text-white/60">{meta(person)}</p>
         </div>
       </Card3D>
     </Reveal>
@@ -177,7 +177,7 @@ function Group({ title, people, filter }) {
       <div className="mb-6 flex items-center gap-4">
         <h3 className="font-display text-xl font-semibold text-white">{title}</h3>
         <span className="h-px flex-1 bg-white/10" />
-        <span className="font-mono text-xs text-white/40">{people.length}</span>
+        <span className="font-mono text-xs text-white/60">{people.length}</span>
       </div>
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
         {people.map((p, i) => (

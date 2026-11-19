@@ -244,7 +244,7 @@ export default function App() {
       <BackToTop />
       <Nav ready={ready} />
       <MobileDock />
-      <AnnouncementBar ready={ready} />
+      <AnnouncementBar />
 
       <main id="main" tabIndex={-1} className="relative z-10 outline-none">
         {path !== '/' && pageFor(path) && <h1 className="sr-only">{pageFor(path).label} | {SITE.name}</h1>}
@@ -257,7 +257,9 @@ export default function App() {
             <Stats />
             <ClubPhoto />
             <AboutPreview />
-            <Journey onOpen={setActiveEvent} embedded />
+            <Suspense fallback={<div className="min-h-[60svh]" />}>
+              <Journey onOpen={setActiveEvent} embedded />
+            </Suspense>
             <LearnPreview />
           </div>
         )}

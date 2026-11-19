@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import { ArrowRight, Megaphone, X } from 'lucide-react'
 import { navigate } from '../lib/scroll'
 import { ANNOUNCEMENT } from '../data/news'
@@ -7,7 +7,7 @@ const KEY = 'aws-ann-closed'
 const text = ANNOUNCEMENT.text
 
 // Thin official notice bar at the very top. Visitors can close it (it stays closed for that visit).
-export default function AnnouncementBar({ ready }) {
+export default function AnnouncementBar() {
   const [closed, setClosed] = useState(() => {
     try {
       return sessionStorage.getItem(KEY) === text
@@ -15,10 +15,10 @@ export default function AnnouncementBar({ ready }) {
       return false
     }
   })
-  const show = !!text && !closed && ready
+  const show = !!text && !closed
 
   // other fixed bars read this to sit just below
-  useEffect(() => {
+  useLayoutEffect(() => {
     document.documentElement.style.setProperty('--ann', show ? '2rem' : '0px')
     return () => document.documentElement.style.setProperty('--ann', '0px')
   }, [show])

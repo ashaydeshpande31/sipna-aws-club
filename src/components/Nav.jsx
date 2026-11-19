@@ -162,7 +162,7 @@ export default function Nav({ ready }) {
                   className={`relative block rounded-full px-2.5 py-2 text-[13px] transition-colors sm:px-3.5 sm:text-sm ${
                     active === id
                       ? 'text-white [text-shadow:0_0_14px_rgba(196,167,255,0.9)]'
-                      : 'text-white/45 hover:text-white'
+                      : 'text-white/60 hover:text-white'
                   }`}
                 >
                   {label}

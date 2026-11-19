@@ -47,13 +47,13 @@ export default function Footer({ onTerminal }) {
               An AWS Student Builder Group at {SITE.college}.
             </p>
 
-            <p className="mt-4 flex max-w-sm items-start gap-2 text-sm text-white/45">
+            <p className="mt-4 flex max-w-sm items-start gap-2 text-sm text-white/60">
               <MapPin size={16} className="mt-0.5 shrink-0 text-aws-soft" />
               {SITE.address}
             </p>
 
             {CONTACT.email && (
-              <p className="mt-3 flex max-w-sm items-start gap-2 text-sm text-white/45">
+              <p className="mt-3 flex max-w-sm items-start gap-2 text-sm text-white/60">
                 <Mail size={16} className="mt-0.5 shrink-0 text-aws-soft" />
                 <a href={`mailto:${CONTACT.email}`} className="hover:text-white">
                   {CONTACT.email}
@@ -117,7 +117,7 @@ export default function Footer({ onTerminal }) {
             />
 
             <div className="mt-6">
-              <p className="mb-2.5 font-mono text-[11px] uppercase tracking-[0.2em] text-white/40">Accent colour</p>
+              <p className="mb-2.5 font-mono text-[11px] uppercase tracking-[0.2em] text-white/60">Accent colour</p>
               <ThemePicker />
               <InstallButton className="mt-4" />
             </div>
@@ -138,7 +138,7 @@ export default function Footer({ onTerminal }) {
 
         </div>
 
-        <div className="mt-14 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-white/40 md:flex-row">
+        <div className="mt-14 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-white/60 md:flex-row">
           <span>
             © {year} {SITE.name}. All rights reserved.
           </span>
@@ -169,7 +169,7 @@ export default function Footer({ onTerminal }) {
           ))}
         </nav>
 
-        <p className="mt-4 text-center text-[11px] text-white/30">
+        <p className="mt-4 text-center text-[11px] text-white/60">
           AWS and related marks are trademarks of Amazon.com, Inc. or its affiliates. This is a student community site.
         </p>
 

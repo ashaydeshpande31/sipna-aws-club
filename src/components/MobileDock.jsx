@@ -85,7 +85,7 @@ export default function MobileDock() {
           />
           <div className="fixed inset-x-3 bottom-[calc(4.9rem+env(safe-area-inset-bottom))] z-[67] rounded-3xl border border-aws/30 bg-[#120a24] p-4 shadow-[0_20px_60px_-10px_rgba(0,0,0,0.9)]">
             <div className="mb-3 flex items-center justify-between px-1">
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/45">More pages</span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/60">More pages</span>
               <button type="button" onClick={() => setOpen(false)} aria-label="Close" className="p-1 text-white/60">
                 <X size={16} />
               </button>

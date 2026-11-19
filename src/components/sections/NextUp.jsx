@@ -30,7 +30,7 @@ function Cell({ value, label }) {
   return (
     <div className="min-w-[3.4rem] rounded-xl bg-white/5 px-3 py-2 text-center">
       <div className="font-display text-2xl font-bold tabular-nums text-white">{value}</div>
-      <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/45">{label}</div>
+      <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/60">{label}</div>
     </div>
   )
 }
