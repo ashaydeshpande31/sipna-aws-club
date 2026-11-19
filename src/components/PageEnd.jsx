@@ -1,8 +1,9 @@
 import { ArrowRight } from 'lucide-react'
 import { navigate } from '../lib/scroll'
+import { isHidden } from '../lib/routes'
 
 // The pages in reading order. Each page ends with a card for the next one, so visitors always know where to go.
-const ORDER = [
+const ALL = [
   ['/about', 'About', 'Our mission, vision and what you get from the club.'],
   ['/events', 'Events', 'Photos and videos from our past events.'],
   ['/upcoming', 'Upcoming', 'What is coming next and how to be part of it.'],
@@ -11,6 +12,7 @@ const ORDER = [
   ['/play', 'Play', 'A quick AWS quiz and an architecture puzzle.'],
   ['/connect', 'Connect', 'Ask us anything, we reply fast.'],
 ]
+const ORDER = ALL.filter((o) => !isHidden(o[0]))
 export const END_PAGES = ORDER.map((o) => o[0])
 
 const go = (to) => (e) => {

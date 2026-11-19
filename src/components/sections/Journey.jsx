@@ -6,6 +6,7 @@ import { SITE } from '../../data/site'
 import { PAST_EVENTS, UPCOMING_EVENT } from '../../data/events'
 import { youtubeId } from '../../lib/eventMedia'
 import { chip, pad2, btnPrimary } from '../../lib/ui'
+import { isHidden } from '../../lib/routes'
 
 function buildNodes() {
   const founded = new Date(SITE.founded)
@@ -164,7 +165,7 @@ export default function Journey({onOpen, embedded = false }) {
         })}
       </div>
 
-      {embedded && (
+      {embedded && !isHidden('/events') && (
         <div className="mt-14 flex justify-center">
           <button type="button" onClick={() => navigate('/events')} className={btnPrimary}>
             See past events

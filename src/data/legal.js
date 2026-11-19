@@ -14,7 +14,7 @@ const contactLine = CONTACT.email
 export const LEGAL = {
   privacy: {
     title: 'Privacy Policy',
-    updated: '2026-11-18',
+    updated: '2026-11-19',
     intro: `${SITE.name} is a student community at ${SITE.college}. This page explains, in plain words, what information this website handles.`,
     sections: [
       {
@@ -22,6 +22,7 @@ export const LEGAL = {
         p: [
           'Only what you choose to send us. If you use the contact form on the Connect page, we receive the name, email address and message you type in.',
           'If you join through our Google Form or WhatsApp community, that information is handled by Google or WhatsApp under their own policies.',
+          'We count visits to understand which pages help people. This is anonymous: we record the page, the type of device (phone, tablet or computer), the browser, the country and where the visit came from, tied to a random code kept in your browser. We do not store your name, IP address or any account details, and we do not count visitors who send a "Do Not Track" signal.',
         ],
       },
       {

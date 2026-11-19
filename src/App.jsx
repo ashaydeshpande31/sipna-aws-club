@@ -9,6 +9,9 @@ import {
 } from './lib/scroll'
 import { useRoute } from './lib/useRoute'
 import { pageFor } from './lib/routes'
+import { track } from './lib/track'
+import LogoMark from './components/ui/LogoMark'
+import S from './data/settings.json'
 import { SITE } from './data/site'
 
 import Loader from './components/Loader'
@@ -86,12 +89,13 @@ const Join = lazyPage(LOADERS.Join)
 const EventModal = lazy(LOADERS.EventModal)
 const Terminal = lazy(() => import('./components/Terminal'))
 
-export default function App() {
+function Site() {
   const [ready, setReady] = useState(false)
   const [activeEvent, setActiveEvent] = useState(null)
   const [terminalOpen, setTerminalOpen] = useState(false)
 
   const path = useRoute()
+  const view = pageFor(path) ? path : '/404' // pages the admin switched off look like a missing page
   const baseTitle = useRef('')
 
   // Initialize smooth scrolling
@@ -191,6 +195,12 @@ export default function App() {
     }
   }, [path])
 
+  // anonymous visitor counting for the admin page (see src/lib/track.js)
+  useEffect(() => track.start(), [])
+  useEffect(() => {
+    if (path !== '/journey') track.view(pageFor(path) ? path : '/other')
+  }, [path])
+
   // Easter egg: typing "aws" opens the terminal
   useEffect(() => {
     let buffer = ''
@@ -249,7 +259,7 @@ export default function App() {
       <main id="main" tabIndex={-1} className="relative z-10 outline-none">
         {path !== '/' && pageFor(path) && <h1 className="sr-only">{pageFor(path).label} | {SITE.name}</h1>}
         <Suspense fallback={<div className="min-h-[75svh]" />}>
-        {path === '/' && (
+        {view === '/' && (
           <div key={path}>
             <Hero ready={ready} />
             <NextUp />
@@ -264,75 +274,75 @@ export default function App() {
           </div>
         )}
 
-        {path === '/about' && (
+        {view === '/about' && (
           <div key={path} className="min-h-[75svh]">
             <About />
             <Benefits />
           </div>
         )}
 
-        {path === '/events' && (
+        {view === '/events' && (
           <div key={path}>
             <EventsReel onOpen={setActiveEvent} />
             <Winners />
           </div>
         )}
 
-        {path === '/upcoming' && (
+        {view === '/upcoming' && (
           <div key={path} className="min-h-[75svh]">
             <Upcoming />
           </div>
         )}
 
-        {path === '/team' && (
+        {view === '/team' && (
           <div key={path} className="min-h-[75svh]">
             <Team />
           </div>
         )}
 
-        {path === '/learn' && (
+        {view === '/learn' && (
           <div key={path} className="min-h-[75svh] pt-24 md:pt-28">
             <Learn />
           </div>
         )}
 
-        {path === '/connect' && (
+        {view === '/connect' && (
           <div key={path} className="min-h-[75svh] pt-24 md:pt-28">
             <Connect />
           </div>
         )}
 
-        {path === '/faq' && (
+        {view === '/faq' && (
           <div key={path} className="min-h-[75svh] pt-24 md:pt-28">
             <Faq />
           </div>
         )}
 
-        {path === '/play' && (
+        {view === '/play' && (
           <div key={path} className="min-h-[75svh] pt-24 md:pt-28">
             <Play />
           </div>
         )}
 
-        {path === '/news' && (
+        {view === '/news' && (
           <div key={path} className="min-h-[75svh] pt-24 md:pt-28">
             <News />
           </div>
         )}
 
-        {['/privacy', '/terms', '/conduct'].includes(path) && (
+        {['/privacy', '/terms', '/conduct'].includes(view) && (
           <div key={path} className="min-h-[75svh] pt-24 md:pt-28">
             <Legal doc={path.slice(1)} />
           </div>
         )}
 
-        {path === '/join' && (
+        {view === '/join' && (
           <div key={path} className="min-h-[75svh] pt-24 md:pt-28">
             <Join />
           </div>
         )}
 
-        {END_PAGES.includes(path) && <PageEnd path={path} />}
+        {END_PAGES.includes(view) && <PageEnd path={path} />}
 
         {!pageFor(path) && (
           <div
@@ -374,4 +384,24 @@ export default function App() {
       </Suspense>
     </div>
   )
+}
+// The admin can switch the whole site to a "back soon" screen (/admin > Site controls > Maintenance mode).
+function Maintenance() {
+  useEffect(() => {
+    document.title = `Back soon | ${SITE.name}`
+  }, [])
+  return (
+    <div className="grid min-h-svh place-items-center bg-ink px-6 text-center">
+      <div className="max-w-md">
+        <LogoMark className="mx-auto h-16 w-16" />
+        <p className="mt-6 font-mono text-xs uppercase tracking-[0.22em] text-aws-soft">{SITE.name}</p>
+        <h1 className="mt-3 font-display text-3xl font-bold text-white">We will be right back</h1>
+        <p className="mt-3 text-base leading-relaxed text-white/70">{S.maintenance?.message || 'We are updating the website. Please check back soon.'}</p>
+      </div>
+    </div>
+  )
+}
+
+export default function App() {
+  return S.maintenance?.on ? <Maintenance /> : <Site />
 }

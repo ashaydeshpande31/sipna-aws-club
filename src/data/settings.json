@@ -1,0 +1,38 @@
+{
+  "announcement": {
+    "text": "Join our WhatsApp community to get every event update first.",
+    "linkLabel": "Join now",
+    "linkTo": "/join"
+  },
+  "maintenance": {
+    "on": false,
+    "message": "We are updating the website. Please check back in a few minutes."
+  },
+  "hiddenPages": [],
+  "quizOpen": true,
+  "links": {
+    "joinForm": "",
+    "whatsapp": "https://chat.whatsapp.com/GXXex8U6TDl8xqDSXSJATu",
+    "linkedin": "https://www.linkedin.com/company/aws-student-builder-group-at-sipna/",
+    "github": "",
+    "instagram": "https://www.instagram.com/aws_sbg_sipna"
+  },
+  "contact": {
+    "accessKey": "",
+    "email": ""
+  },
+  "news": [
+    {
+      "date": "2026-11-18",
+      "kind": "Update",
+      "title": "The new Sipna AWS Club website is live",
+      "text": "Every section now has its own page, with an events archive, FAQ, a contact page and a faster experience on phones."
+    },
+    {
+      "date": "2026-07-01",
+      "kind": "Notice",
+      "title": "Sipna AWS Club started",
+      "text": "The AWS Student Builder Group at Sipna COET began its journey to bring hands-on cloud learning to every student."
+    }
+  ]
+}

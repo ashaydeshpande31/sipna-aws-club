@@ -6,6 +6,7 @@ import { HERO } from '../../data/site'
 import { UPCOMING_EVENT } from '../../data/events'
 import { btnPrimary, btnGhost } from '../../lib/ui'
 import FloatingServices from '../ui/FloatingServices'
+import { isHidden } from '../../lib/routes'
 
 const CloudScene = lazy(() => import('../three/CloudScene'))
 
@@ -135,13 +136,15 @@ export default function Hero({ ready }) {
               </a>
             </Magnetic>
 
-            <Magnetic>
-              <a href="/events" onClick={go('events')} className={btnGhost}>
-                See Our Events
-              </a>
-            </Magnetic>
+            {!isHidden('/events') && (
+              <Magnetic>
+                <a href="/events" onClick={go('events')} className={btnGhost}>
+                  See Our Events
+                </a>
+              </Magnetic>
+            )}
 
-            <a
+            {!isHidden('/play') && <a
               href="/play"
               onClick={(e) => {
                 if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return
@@ -151,10 +154,10 @@ export default function Hero({ ready }) {
               className="inline-flex items-center gap-2 rounded-full px-3 py-3.5 text-sm font-semibold text-aws-soft hover:text-white"
             >
               <Gamepad2 size={16} /> Play AWS Quiz
-            </a>
+            </a>}
           </div>
 
-          {nextDate && (
+          {nextDate && !isHidden('/upcoming') && (
             <a
               data-in
               href="/upcoming"

@@ -4,12 +4,12 @@ import Socials from './ui/Socials'
 import ShareButton from './ui/ShareButton'
 import ThemePicker from './ui/ThemePicker'
 import InstallButton from './ui/InstallButton'
-import { pathForId } from '../lib/routes'
+import { pathForId, linkVisible } from '../lib/routes'
 import { navigate } from '../lib/scroll'
 import { SITE } from '../data/site'
 import { CONTACT } from '../data/contact'
 
-const LINKS = [
+const ALL_LINKS = [
   ['About', 'about'],
   ['Events', 'events'],
   ['Upcoming', 'upcoming'],
@@ -21,6 +21,7 @@ const LINKS = [
   ['Connect', 'connect'],
   ['Join', 'join'],
 ]
+const LINKS = ALL_LINKS.filter(([, id]) => linkVisible(id))
 
 export default function Footer({ onTerminal }) {
   const year = new Date().getFullYear()

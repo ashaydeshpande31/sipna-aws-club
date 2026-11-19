@@ -9,6 +9,8 @@ import { haptic } from '../../lib/haptic'
 import { navigate } from '../../lib/scroll'
 import { QUIZ, BUILDS, SERVICES } from '../../data/play'
 import { btnPrimary, btnGhost } from '../../lib/ui'
+import { track } from '../../lib/track'
+import S from '../../data/settings.json'
 
 const ICONS = { HardDrive, Network, Globe, Lock, Server, Database, Brain, Zap, Webhook, Archive, Activity }
 const shuffle = (a) => {
@@ -168,6 +170,7 @@ function Quiz() {
     setAttempt(a)
     setPlaying(false)
     if (final >= 6) setTimeout(() => confetti(window.innerWidth / 2, window.innerHeight * 0.35, { count: 140, haptic: true }), 150)
+    track.event('quiz_done')
     setBusy(true)
     try {
       await api('POST', { name: a.name, score: final })
@@ -231,6 +234,18 @@ function Quiz() {
           </>
         )}
         <Leaderboard me={attempt} refreshKey={tick + (busy ? 0.5 : 0)} />
+      </div>
+    )
+  }
+
+  // 2a) the admin has closed the quiz (/admin > Site controls)
+  if (!playing && S.quizOpen === false) {
+    return (
+      <div className="glass mx-auto max-w-xl rounded-3xl p-6 text-center md:p-8">
+        <Trophy className="mx-auto text-smile" size={36} />
+        <h3 className="mt-3 font-display text-2xl font-semibold text-white">The quiz is closed for now</h3>
+        <p className="mt-2 text-sm leading-relaxed text-white/60">Come back soon. Meanwhile, see who is on top.</p>
+        <Leaderboard me={null} refreshKey={0} />
       </div>
     )
   }

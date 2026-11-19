@@ -1,3 +1,10 @@
+import S from '../data/settings.json'
+
+// Pages the admin can switch off (/admin > Site controls). Home, About, Join and the legal pages always stay.
+export const HIDEABLE = ['/events', '/upcoming', '/team', '/learn', '/connect', '/faq', '/play', '/news']
+const OFF = new Set((S.hiddenPages || []).filter((p) => HIDEABLE.includes(p)))
+export const isHidden = (path) => OFF.has(path)
+
 // The pages of the site. Every old section now has its own page (its own address).
 // "ids" are the old section ids: scrollToId('join') now simply opens the /join page.
 export const PAGES = [
@@ -18,4 +25,8 @@ export const PAGES = [
 ]
 
 export const pathForId = (id) => (PAGES.find((p) => p.ids.includes(id)) || PAGES[0]).path
-export const pageFor = (path) => PAGES.find((p) => p.path === path)
+export const pageFor = (path) => {
+  const p = PAGES.find((x) => x.path === path)
+  return p && !OFF.has(p.path) ? p : undefined // a switched-off page behaves like a page that does not exist
+}
+export const linkVisible = (id) => !OFF.has(pathForId(id))

@@ -2,6 +2,7 @@
 //  SITE CONTENT  (club text, links, FAQ, learning path)
 //  Edit text here. The team lives in team.js, events in events.js.
 // ============================================================
+import S from './settings.json'
 
 export const SITE = {
   name: 'Sipna AWS Club',
@@ -15,16 +16,8 @@ export const SITE = {
   // Shown in the footer. Set to '' to hide.
   credit: 'A.A.S.D',
 
-  links: {
-    // Paste your Google Form / registration link here. Empty = button shows "coming soon".
-    joinForm: '',
-    // Paste your WhatsApp community invite link here. Empty = button is hidden.
-    whatsapp: 'https://chat.whatsapp.com/GXXex8U6TDl8xqDSXSJATu',
-    // Social pages (check these are the real club accounts).
-    linkedin: 'https://www.linkedin.com/company/aws-student-builder-group-at-sipna/',
-    github: '',
-    instagram: 'https://www.instagram.com/aws_sbg_sipna',
-  },
+  // Social and join links. Edited from /admin > Site controls (settings.json). An empty link is hidden.
+  links: S.links,
 }
 
 export const JOIN_URL = SITE.links.joinForm || SITE.links.whatsapp

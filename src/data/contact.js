@@ -10,8 +10,7 @@
 //  filled) or shows the WhatsApp / Instagram buttons instead. Nothing breaks either way.
 // ============================================================
 
-export const CONTACT = {
-  accessKey: '',
-  // Optional public club email. Shown on the page and used as the fallback.
-  email: '',
-}
+import S from './settings.json'
+
+// Both values are edited from /admin > Site controls (they live in settings.json).
+export const CONTACT = S.contact

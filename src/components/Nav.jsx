@@ -2,12 +2,12 @@ import { useEffect, useRef, useState } from 'react'
 import { ArrowRight } from 'lucide-react'
 import { gsap, navigate } from '../lib/scroll'
 import { useRoute } from '../lib/useRoute'
-import { pathForId } from '../lib/routes'
+import { pathForId, linkVisible } from '../lib/routes'
 import LogoMark from './ui/LogoMark'
 import { SITE } from '../data/site'
 
 // Same links on mobile and desktop
-const LINKS = [
+const ALL_LINKS = [
   ['About', 'about'],
   ['Events', 'events'],
   ['Upcoming', 'upcoming'],
@@ -16,6 +16,7 @@ const LINKS = [
   ['Play', 'play'],
   ['Connect', 'connect'],
 ]
+const LINKS = ALL_LINKS.filter(([, id]) => linkVisible(id))
 
 export default function Nav({ ready }) {
   const [scrolled, setScrolled] = useState(false)

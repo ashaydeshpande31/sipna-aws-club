@@ -1,4 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { api, clone, same, input, Field, Btn, Modal } from './ui.jsx'
+import Analytics from './Analytics.jsx'
+import Controls, { DEFAULT_SETTINGS } from './Controls.jsx'
+import Tools from './Tools.jsx'
 
 // ------------------------------------------------------------
 //  Admin page (/admin). Talks to /api/admin, which commits to GitHub.
@@ -14,22 +18,6 @@ const slug = (s) =>
 
 const IMG_RE = /\.(jpe?g|png|webp)$/i
 const VID_RE = /\.(mp4|webm)$/i
-
-async function api(password, body) {
-  const res = await fetch('/api/admin', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-admin-password': password },
-    body: JSON.stringify(body),
-  })
-  let data = {}
-  try {
-    data = await res.json()
-  } catch {
-    /* not json */
-  }
-  if (!res.ok) throw new Error(data.error || `Request failed (${res.status}). Is the API deployed?`)
-  return data
-}
 
 // Shrinks a photo in the browser and returns a JPEG (keeps uploads small and fast).
 async function compress(file, maxSide, quality = 0.85) {
@@ -51,54 +39,7 @@ async function compress(file, maxSide, quality = 0.85) {
   return { base64, preview: URL.createObjectURL(blob) }
 }
 
-const clone = (x) => JSON.parse(JSON.stringify(x))
-const same = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 const personPhotos = (t) => [t.leader, ...t.core, ...t.members].map((p) => p.photo).filter(Boolean)
-
-// ---------- small UI pieces ----------
-const input =
-  'w-full rounded-lg border border-white/10 bg-ink-2 px-3 py-2 text-sm text-white outline-none placeholder:text-white/30 focus:border-aws'
-
-function Field({ label, hint, children }) {
-  return (
-    <label className="block">
-      <span className="mb-1 block text-xs font-medium uppercase tracking-wider text-white/60">{label}</span>
-      {children}
-      {hint && <span className="mt-1 block text-xs text-white/40">{hint}</span>}
-    </label>
-  )
-}
-
-function Btn({ kind = 'ghost', className = '', ...p }) {
-  const styles = {
-    primary: 'bg-aws text-white hover:bg-aws-deep disabled:opacity-40',
-    ghost: 'border border-white/15 text-white/80 hover:bg-white/5 disabled:opacity-40',
-    danger: 'border border-red-400/30 text-red-300 hover:bg-red-500/10 disabled:opacity-40',
-  }
-  return (
-    <button
-      type="button"
-      {...p}
-      className={`rounded-lg px-3 py-2 text-sm font-medium transition ${styles[kind]} ${className}`}
-    />
-  )
-}
-
-function Modal({ title, onClose, children }) {
-  return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/70 p-4 sm:p-8">
-      <div className="w-full max-w-2xl rounded-2xl border border-white/10 bg-panel p-5 sm:p-6">
-        <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-white">{title}</h3>
-          <button type="button" onClick={onClose} className="text-2xl leading-none text-white/50 hover:text-white">
-            ×
-          </button>
-        </div>
-        {children}
-      </div>
-    </div>
-  )
-}
 
 // ---------- login ----------
 function Login({ onLogin }) {
@@ -110,9 +51,9 @@ function Login({ onLogin }) {
     setBusy(true)
     setErr('')
     try {
-      const data = await api(pw, { action: 'load' })
+      await api(pw, { action: 'login' })
       sessionStorage.setItem('aws-admin-pw', pw)
-      onLogin(pw, data)
+      onLogin(pw)
     } catch (ex) {
       setErr(ex.message)
     }
@@ -578,12 +519,16 @@ function UpcomingTab({ data, setData }) {
 }
 
 // ---------- shell ----------
-function Dashboard({ password, initial, onLogout }) {
-  const [server, setServer] = useState(initial) // what is in GitHub right now
-  const [data, setData] = useState(() => ({ team: clone(initial.team), pastEvents: clone(initial.pastEvents), upcoming: clone(initial.upcoming) }))
+const EMPTY = { team: { leader: { socials: {} }, core: [], members: [], photo: {} }, pastEvents: [], upcoming: {}, settings: null, assets: [], repo: '', branch: '' }
+const pick = (d) => ({ team: clone(d.team), pastEvents: clone(d.pastEvents), upcoming: clone(d.upcoming), settings: clone(d.settings || DEFAULT_SETTINGS) })
+
+function Dashboard({ password, initial, flags, loadError, onLogout }) {
+  const ready = !!initial
+  const [server, setServer] = useState(() => ({ ...EMPTY, ...(initial || {}), settings: (initial && initial.settings) || DEFAULT_SETTINGS })) // what is in GitHub right now
+  const [data, setData] = useState(() => pick(server))
   const [uploads, setUploads] = useState({}) // path -> { base64, preview }
   const [removed, setRemoved] = useState(() => new Set())
-  const [tab, setTab] = useState('team')
+  const [tab, setTab] = useState('analytics')
   const [status, setStatus] = useState({ kind: '', text: '' })
   const [saving, setSaving] = useState(false)
   const uploadsRef = useRef(uploads)
@@ -605,10 +550,11 @@ function Dashboard({ password, initial, onLogout }) {
       team: !same(data.team, server.team) || Object.keys(uploads).some((p) => /src\/assets\/team(-photo)?\//.test(p)),
       pastEvents: !same(data.pastEvents, server.pastEvents) || Object.keys(uploads).some((p) => p.includes('/events/')) || [...removed].length > 0,
       upcoming: !same(data.upcoming, server.upcoming),
+      settings: !same(data.settings, server.settings),
     }),
     [data, server, uploads, removed],
   )
-  const dirty = changed.team || changed.pastEvents || changed.upcoming
+  const dirty = ready && (changed.team || changed.pastEvents || changed.upcoming || changed.settings)
 
   useEffect(() => {
     if (!dirty) return
@@ -619,7 +565,7 @@ function Dashboard({ password, initial, onLogout }) {
 
   const discard = () => {
     if (!confirm('Throw away all unsaved changes?')) return
-    setData({ team: clone(server.team), pastEvents: clone(server.pastEvents), upcoming: clone(server.upcoming) })
+    setData(pick(server))
     setUploads({})
     setRemoved(new Set())
   }
@@ -657,12 +603,14 @@ function Dashboard({ password, initial, onLogout }) {
       if (!same(data.team, server.team)) content.team = data.team
       if (!same(data.pastEvents, server.pastEvents)) content.pastEvents = data.pastEvents
       if (!same(data.upcoming, server.upcoming)) content.upcoming = data.upcoming
-      const parts = Object.entries(changed).filter(([, v]) => v).map(([k]) => (k === 'pastEvents' ? 'events' : k))
+      if (!same(data.settings, server.settings)) content.settings = data.settings
+      const parts = Object.entries(changed).filter(([, v]) => v).map(([k]) => (k === 'pastEvents' ? 'events' : k === 'settings' ? 'site controls' : k))
       setStatus({ kind: '', text: 'Publishing...' })
       await api(password, { action: 'commit', message: `update ${parts.join(', ')}`, files, deletes: [...deletes].filter((p) => server.assets.includes(p)), content })
       const fresh = await api(password, { action: 'load' })
-      setServer(fresh)
-      setData({ team: clone(fresh.team), pastEvents: clone(fresh.pastEvents), upcoming: clone(fresh.upcoming) })
+      const next = { ...fresh, settings: fresh.settings || DEFAULT_SETTINGS }
+      setServer(next)
+      setData(pick(next))
       setUploads({})
       setRemoved(new Set())
       setStatus({ kind: 'ok', text: 'Published. The live site updates in about a minute.' })
@@ -673,13 +621,17 @@ function Dashboard({ password, initial, onLogout }) {
   }
 
   const tabs = [
+    ['analytics', 'Visitors'],
+    ['controls', 'Site controls'],
     ['team', 'Team'],
     ['events', 'Past events'],
     ['upcoming', 'Upcoming event'],
+    ['tools', 'Quiz & data'],
   ]
+  const needsContent = ['controls', 'team', 'events', 'upcoming'].includes(tab)
 
   return (
-    <div className="mx-auto min-h-screen max-w-3xl p-4 pb-32 sm:p-8 sm:pb-32">
+    <div className={`mx-auto min-h-screen p-4 pb-32 sm:p-8 sm:pb-32 ${tab === 'analytics' ? 'max-w-5xl' : 'max-w-3xl'}`}>
       <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-xl font-semibold text-white">Sipna AWS Club admin</h1>
         <div className="flex gap-2">
@@ -688,22 +640,30 @@ function Dashboard({ password, initial, onLogout }) {
         </div>
       </header>
 
-      <nav className="mb-6 flex gap-2 border-b border-white/10 pb-3">
+      <nav className="mb-6 flex gap-2 overflow-x-auto border-b border-white/10 pb-3">
         {tabs.map(([k, label]) => (
           <button
             key={k}
             type="button"
             onClick={() => setTab(k)}
-            className={`rounded-lg px-4 py-2 text-sm font-medium ${tab === k ? 'bg-aws text-white' : 'text-white/60 hover:bg-white/5'}`}
+            className={`shrink-0 rounded-lg px-4 py-2 text-sm font-medium ${tab === k ? 'bg-aws text-white' : 'text-white/60 hover:bg-white/5'}`}
           >
             {label}
           </button>
         ))}
       </nav>
 
-      {tab === 'team' && <TeamTab data={data} setData={setData} ctx={ctx} />}
-      {tab === 'events' && <EventsTab data={data} setData={setData} ctx={ctx} />}
-      {tab === 'upcoming' && <UpcomingTab data={data} setData={setData} />}
+      {tab === 'analytics' && <Analytics password={password} flags={flags} />}
+      {tab === 'tools' && <Tools password={password} flags={flags} />}
+      {needsContent && !ready && (
+        <p className="rounded-xl border border-amber-300/30 bg-amber-300/5 p-4 text-sm text-white/80">
+          Site editing is not available: {loadError || 'GITHUB_TOKEN is missing in Vercel.'} Add it in Vercel (Settings, Environment Variables), redeploy, then log in again. Visitor numbers and quiz tools still work.
+        </p>
+      )}
+      {needsContent && ready && tab === 'controls' && <Controls data={data} setData={setData} />}
+      {needsContent && ready && tab === 'team' && <TeamTab data={data} setData={setData} ctx={ctx} />}
+      {needsContent && ready && tab === 'events' && <EventsTab data={data} setData={setData} ctx={ctx} />}
+      {needsContent && ready && tab === 'upcoming' && <UpcomingTab data={data} setData={setData} />}
 
       {(dirty || status.text) && (
         <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-ink/95 p-3 backdrop-blur">
@@ -727,6 +687,21 @@ function Dashboard({ password, initial, onLogout }) {
   )
 }
 
+// Checks the password, then loads the site content. Visitor numbers work even if GitHub editing is not set up.
+async function begin(password) {
+  const flags = await api(password, { action: 'login' })
+  let data = null
+  let loadError = ''
+  if (flags.github) {
+    try {
+      data = await api(password, { action: 'load' })
+    } catch (e) {
+      loadError = e.message
+    }
+  }
+  return { password, data, flags, loadError }
+}
+
 export default function Admin() {
   const [session, setSession] = useState(null) // { password, data }
   const [checking, setChecking] = useState(() => !!sessionStorage.getItem('aws-admin-pw'))
@@ -739,8 +714,8 @@ export default function Admin() {
     document.head.appendChild(meta)
     const pw = sessionStorage.getItem('aws-admin-pw')
     if (pw) {
-      api(pw, { action: 'load' })
-        .then((data) => setSession({ password: pw, data }))
+      begin(pw)
+        .then((s) => setSession(s))
         .catch(() => sessionStorage.removeItem('aws-admin-pw'))
         .finally(() => setChecking(false))
     }
@@ -748,11 +723,13 @@ export default function Admin() {
   }, [])
 
   if (checking) return <div className="grid min-h-screen place-items-center text-white/60">Loading...</div>
-  if (!session) return <Login onLogin={(password, data) => setSession({ password, data })} />
+  if (!session) return <Login onLogin={(password) => begin(password).then(setSession)} />
   return (
     <Dashboard
       password={session.password}
       initial={session.data}
+      flags={session.flags}
+      loadError={session.loadError}
       onLogout={() => {
         sessionStorage.removeItem('aws-admin-pw')
         setSession(null)

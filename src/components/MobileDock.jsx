@@ -18,23 +18,26 @@ import { haptic } from '../lib/haptic'
 import ThemePicker from './ui/ThemePicker'
 import InstallButton from './ui/InstallButton'
 import { useRoute } from '../lib/useRoute'
+import { isHidden } from '../lib/routes'
 import LogoMark from './ui/LogoMark'
 import { SITE } from '../data/site'
 
 // Phones only: a slim top bar (logo + Join) and an app-style bottom tab bar, like the Coders Club site.
-const TABS = [
+const ALL_TABS = [
   { to: '/', label: 'Home', Icon: Home },
   { to: '/events', label: 'Events', Icon: CalendarDays },
   { to: '/upcoming', label: 'Upcoming', Icon: Sparkles },
   { to: '/team', label: 'Team', Icon: Users },
 ]
-const MORE = [
+const ALL_MORE = [
   { to: '/about', label: 'About', Icon: Info },
   { to: '/play', label: 'Play', Icon: Gamepad2 },
   { to: '/learn', label: 'Learn', Icon: GraduationCap },
   { to: '/connect', label: 'Connect', Icon: Mail },
   { to: '/faq', label: 'FAQ', Icon: CircleHelp },
 ]
+const TABS = ALL_TABS.filter((t) => !isHidden(t.to))
+const MORE = ALL_MORE.filter((t) => !isHidden(t.to))
 
 const go = (url) => (e) => {
   if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return
