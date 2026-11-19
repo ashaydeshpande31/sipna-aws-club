@@ -9,6 +9,7 @@ import './index.css'
 import './lib/theme' // applies the visitor's saved accent colour before the page shows
 
 import App from './App.jsx'
+import ErrorBoundary from './components/ErrorBoundary.jsx'
 
 // /admin opens the admin page (loaded only when needed, so the public site stays light)
 const Admin = lazy(() => import('./admin/Admin.jsx'))
@@ -21,12 +22,14 @@ if (!isAdmin && import.meta.env.PROD && 'serviceWorker' in navigator) {
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    {isAdmin ? (
-      <Suspense fallback={null}>
-        <Admin />
-      </Suspense>
-    ) : (
-      <App />
-    )}
+    <ErrorBoundary>
+      {isAdmin ? (
+        <Suspense fallback={null}>
+          <Admin />
+        </Suspense>
+      ) : (
+        <App />
+      )}
+    </ErrorBoundary>
   </StrictMode>,
 )

@@ -263,7 +263,7 @@ export default function EventModal({ event, onClose }) {
                   onTouchMove={onTouchMove}
                   onTouchEnd={onTouchEnd}
                 >
-                  <img loading="lazy" decoding="async"
+                  <img
                     ref={imgRef}
                     key={photos[idx]}
                     decoding="async"

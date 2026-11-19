@@ -13,8 +13,11 @@ const end = valid ? new Date(start.getTime() + (EV.durationHours || 2) * 3600 * 
 function useNow(active) {
   const [now, setNow] = useState(() => Date.now())
   useEffect(() => {
-    if (!active) return
-    const id = setInterval(() => setNow(Date.now()), 1000)
+    if (!active || Date.now() >= end.getTime()) return
+    const id = setInterval(() => {
+      setNow(Date.now())
+      if (Date.now() >= end.getTime()) clearInterval(id)
+    }, 1000)
     return () => clearInterval(id)
   }, [active])
   return now

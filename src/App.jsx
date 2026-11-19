@@ -158,11 +158,26 @@ export default function App() {
 
     const page = pageFor(path)
 
-    document.title = !page
+    const title = !page
       ? `Page not found | ${SITE.name}`
       : path === '/'
         ? baseTitle.current
         : `${page.label} | ${SITE.name}`
+    document.title = title
+
+    // keep search / share information correct for every page
+    const setMeta = (sel, attr, val) => {
+      const el = document.head.querySelector(sel)
+      if (el) el.setAttribute(attr, val)
+    }
+    const url = `${window.location.origin}${path === '/' ? '/' : path}`
+    setMeta('meta[name="description"]', 'content', page?.desc || SITE.name)
+    setMeta('link[rel="canonical"]', 'href', url)
+    setMeta('meta[property="og:url"]', 'content', url)
+    setMeta('meta[property="og:title"]', 'content', title)
+    setMeta('meta[name="twitter:title"]', 'content', title)
+    setMeta('meta[property="og:description"]', 'content', page?.desc || SITE.name)
+    setMeta('meta[name="robots"]', 'content', page ? 'index, follow' : 'noindex')
 
     scrollToTop(true)
     setActiveEvent(null)
@@ -212,6 +227,17 @@ export default function App() {
 
   return (
     <div className="grain relative">
+      <a
+        href="#main"
+        onClick={(e) => {
+          e.preventDefault()
+          const m = document.getElementById('main')
+          if (m) m.focus()
+        }}
+        className="fixed left-3 top-3 z-[100] -translate-y-24 rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink focus:translate-y-0"
+      >
+        Skip to content
+      </a>
       <Loader onDone={() => setReady(true)} />
       <Atmosphere />
       <FX ready={ready} path={path} />
@@ -220,7 +246,8 @@ export default function App() {
       <MobileDock />
       <AnnouncementBar ready={ready} />
 
-      <main className="relative z-10">
+      <main id="main" tabIndex={-1} className="relative z-10 outline-none">
+        {path !== '/' && pageFor(path) && <h1 className="sr-only">{pageFor(path).label} | {SITE.name}</h1>}
         <Suspense fallback={<div className="min-h-[75svh]" />}>
         {path === '/' && (
           <div key={path}>
